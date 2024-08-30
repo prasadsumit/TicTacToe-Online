@@ -1,8 +1,9 @@
+import Homepage from "./Pages/Homepage";
 
 function App() {
   return (
-    <div className="App">
-      yellow
+    <div>
+      <Homepage />
     </div>
   );
 }
