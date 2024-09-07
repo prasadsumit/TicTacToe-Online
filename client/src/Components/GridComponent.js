@@ -1,5 +1,7 @@
-import {React,useState} from 'react'
+import {React} from 'react'
 import TileComponent from './TileComponent'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateTile } from '../Actions/Actions'
 
 function GridComponent() {
   const gridStyle = {
@@ -8,23 +10,17 @@ function GridComponent() {
     width: "40%"
   }
 
-  const [gameState,setGameState] = useState([
-    [0, 1, 2],
-    [0, 0, 1],
-    [0, 2, 1],
-  ])
-
   const symbolMap = {
     0: '',
     1: 'x',
     2: '0',
   }
-  
+
+  const gameState = useSelector((state) => state.gameState)
+  const dispatch = useDispatch()
+
   const handleClick = (rowIndex, colIndex) => {
-    // console.log(`Row: ${rowIndex}, Column: ${colIndex}`);
-    const newGameState = [...gameState]
-    newGameState[rowIndex][colIndex] = 2
-    setGameState(newGameState)
+    dispatch(updateTile(2,rowIndex,colIndex))
   };
   return (
     <div style={gridStyle}>
