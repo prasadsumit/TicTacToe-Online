@@ -1,6 +1,6 @@
 import React from 'react'
 
-function TileComponent({value}) {
+function TileComponent({value,onClick}) {
     const itemStyle = {
         padding: "20px",
         border: "2px solid red",
@@ -12,7 +12,7 @@ function TileComponent({value}) {
         "text-align": "center"
     }
   return (
-    <div style={itemStyle}>
+    <div onClick={onClick} style={itemStyle}>
         <p style={paraStyle}>{value}</p>
     </div>
   )
