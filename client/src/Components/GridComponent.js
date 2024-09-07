@@ -1,7 +1,7 @@
 import {React} from 'react'
 import TileComponent from './TileComponent'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateTile } from '../Actions/Actions'
+import { updateTile, changePlayer } from '../Actions/Actions'
 
 function GridComponent() {
   const gridStyle = {
@@ -20,7 +20,11 @@ function GridComponent() {
   const dispatch = useDispatch()
 
   const handleClick = (rowIndex, colIndex) => {
-    dispatch(updateTile(2,rowIndex,colIndex))
+    let isTileEmpty = gameState[rowIndex][colIndex] === 0
+    if(isTileEmpty) {
+      dispatch(updateTile(rowIndex,colIndex))
+      dispatch(changePlayer(-1))
+    }
   };
   return (
     <div style={gridStyle}>
