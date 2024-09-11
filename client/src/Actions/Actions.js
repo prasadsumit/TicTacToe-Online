@@ -24,3 +24,13 @@ export const updateTile = (row,col) => {
       }
     };
   };
+
+  export const runGameLogic = (row,col) => {
+    return {
+      type: ActionTypes.RUN_GAME_LOGIC,
+      payload: {
+        row: row,
+        col: col,
+      }
+    };
+  };

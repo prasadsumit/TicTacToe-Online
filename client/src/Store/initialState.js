@@ -5,6 +5,7 @@ const initialState = {
         [0, 0, 0],
       ],
     player: 1,
+    isGameFinished: false,
 }
  
 
