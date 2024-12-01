@@ -31,7 +31,7 @@ const evaluateIndex = (row,col,gameState) => {
 	}
 
 	//row-traverse
-	console.log("row traverse")
+	console.log("row traverse") 
 	var isRowMatch = true
 	for(var i=0;i<3;i++){
 		if(gameState[row][i] !== value){
@@ -46,8 +46,8 @@ const evaluateIndex = (row,col,gameState) => {
 	//col-traverse
 	console.log("col traverse")
 	var isColMatch = true
-	for(var i=0;i<3;i++){
-		if(gameState[i][col] !== value){
+	for(var j=0;j<3;j++){
+		if(gameState[j][col] !== value){
 			isColMatch = false
 			break
 		}

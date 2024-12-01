@@ -1,8 +1,22 @@
-import { createStore } from 'redux';
-import tileReducer from '../Reducers/Reducer';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers } from 'redux';
+import gameStateReducer from '../Reducers/gameStateReducer';
+import playerReducer from '../Reducers/playerReducer';
+import gameStatusReducer from '../Reducers/gameStatusReducer';
 import initialState from './initialState';
+import { thunk } from 'redux-thunk';
 
+// Combining multiple reducers
+const rootReducer = combineReducers({
+  gameState: gameStateReducer,
+  player: playerReducer,
+  gameStatus: gameStatusReducer,
+});
 
-const store = createStore(tileReducer,initialState);
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),  // Add thunk as middleware
+  preloadedState: initialState,  // Correctly set initial state
+});
 
 export default store;

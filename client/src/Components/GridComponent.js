@@ -1,7 +1,7 @@
-import {React, useEffect} from 'react'
+import {React} from 'react'
 import TileComponent from './TileComponent'
-import { useDispatch, useSelector } from 'react-redux'
-import { updateTile, changePlayer, runGameLogic } from '../Actions/Actions'
+import { useSelector } from 'react-redux'
+import { useRunGame } from '../Middleware/RunGame'
 
 function GridComponent() {
   const gridStyle = {
@@ -17,22 +17,12 @@ function GridComponent() {
   }
   
   const gameState = useSelector((state) => state.gameState)
-  const isGameFinished = useSelector(state => state.isGameFinished)
-  const player = useSelector(state => state.player)
-
-  const dispatch = useDispatch()
+  const runGame = useRunGame()
 
   const handleClick = (rowIndex, colIndex) => {
     let isTileEmpty = gameState[rowIndex][colIndex] === 0
     if(isTileEmpty) {
-      dispatch(updateTile(rowIndex,colIndex))
-      dispatch(runGameLogic(rowIndex,colIndex))
-      
-      if(isGameFinished){
-        alert(`Player ${player} wins!`);
-      }else{
-        dispatch(changePlayer(-1))
-      }
+      runGame(rowIndex, colIndex);
     }
   };
   return (
