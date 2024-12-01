@@ -5,19 +5,12 @@ export const useRunGame = () => {
   
   const dispatch = useDispatch()
   const player = useSelector(state => state.player)
-  const isGameFinished = useSelector(state => state.isGameFinished)
   
-  
-  const runGame = (rowIndex, colIndex) => {
-    
-    dispatch(updateTile(rowIndex,colIndex,player))
-    dispatch(runGameLogic(rowIndex,colIndex))  
-    
-    if(isGameFinished){
-      alert(`Player ${player} wins!`);
-    }else{
-      dispatch(changePlayer(-1))
-    }
+  const runGame = (row, col) => {
+    dispatch(updateTile(row,col,player))
+    dispatch(runGameLogic(row,col))  
+    dispatch(changePlayer(-1))
+    // dispatch(executeGame(row,col,player))
   };
 
   return runGame

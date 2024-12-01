@@ -1,17 +1,8 @@
-import React from 'react'
-import { useDispatch } from 'react-redux'
-import { resetTile } from '../Actions/Actions'
 
-function ButtonComponent() {
-
-    const dispatch = useDispatch()
-    const handleResetGame = () => {
-        dispatch(resetTile())
-    }
-
+function ButtonComponent({buttonText, onClick}) {   
   return (
     <div>
-        <button onClick={() => handleResetGame()}>New game</button>
+        <button onClick={onClick}>{buttonText}</button>
     </div>
   )
 }

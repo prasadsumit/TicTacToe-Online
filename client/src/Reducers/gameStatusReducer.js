@@ -3,7 +3,7 @@ import initialState from "../Store/initialState";
 
 const initialGameStatus = initialState.isGameFinished
 
-const evaluateIndex = (row,col,gameState) => {
+function evaluateIndex (row,col,gameState) {
 	if (!gameState || !Array.isArray(gameState) || !Array.isArray(gameState[0])) {
 		throw new Error("Invalid gameState structure");
 	}
@@ -79,11 +79,9 @@ const evaluateIndex = (row,col,gameState) => {
 const gameStatusReducer = (state = initialGameStatus, action) => {
   switch (action.type) {
     case ActionTypes.RUN_GAME_LOGIC:
-      let { row, col, gameState} = action.payload;
+      const { row, col, gameState} = action.payload;
 	//   let gameState = initialState.gameState.map((row) => [...row]);
-      let isGameFinished = evaluateIndex(row, col, gameState);
-
-      return isGameFinished;
+      return evaluateIndex(row, col, gameState);
 
     default:
       return state;

@@ -10,7 +10,7 @@ import { thunk } from 'redux-thunk';
 const rootReducer = combineReducers({
   gameState: gameStateReducer,
   player: playerReducer,
-  gameStatus: gameStatusReducer,
+  isGameFinished: gameStatusReducer,
 });
 
 const store = configureStore({

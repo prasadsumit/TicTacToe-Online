@@ -2,7 +2,7 @@ import React from 'react'
 import GridComponent from '../Components/GridComponent'
 import TextComponent from '../Components/TextComponent'
 import { useSelector } from 'react-redux'
-import ButtonComponent from '../Components/ButtonComponent'
+import ModalWrapper from '../Components/ModalWrapper'
 
 function Homepage() {
 
@@ -12,7 +12,7 @@ function Homepage() {
     <div>
       <GridComponent />
       <TextComponent value={player} />
-      <ButtonComponent />
+      <ModalWrapper />
     </div>
   )
 }
