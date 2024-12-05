@@ -12,10 +12,9 @@ export const updateTile = (row,col) => (dispatch,getState) => {
     });
   };
 
-  export const resetTile = () => {
-    return {
-      type: ActionTypes.RESET_TILE, 
-    };
+  export const resetTile = () => (dispatch) =>  {
+    dispatch({type: ActionTypes.RESET_TILE});
+    dispatch(showWinnerModal(false));
   };
 
   export const changePlayer = (player) => (dispatch,getState) => {
@@ -28,6 +27,9 @@ export const updateTile = (row,col) => (dispatch,getState) => {
         }
       });
     }
+    else {
+      dispatch(showWinnerModal(true));
+    }
     return null
   };
 
@@ -39,6 +41,15 @@ export const updateTile = (row,col) => (dispatch,getState) => {
         row: row,
         col: col,
         gameState:gameState
+      }
+    });
+  };
+
+  export const showWinnerModal = (value) => (dispatch) => {
+    dispatch( {
+      type: ActionTypes.SHOW_WINNER_MODAL,
+      payload: {
+        value: value
       }
     });
   };

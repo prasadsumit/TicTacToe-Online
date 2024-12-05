@@ -6,6 +6,7 @@ const initialState = {
       ],
     player: 1,
     isGameFinished: false,
+    showWinnerModal: false
 }
  
 

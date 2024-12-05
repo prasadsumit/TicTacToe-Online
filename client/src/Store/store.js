@@ -5,12 +5,14 @@ import playerReducer from '../Reducers/playerReducer';
 import gameStatusReducer from '../Reducers/gameStatusReducer';
 import initialState from './initialState';
 import { thunk } from 'redux-thunk';
+import winnerModalReducer from '../Reducers/winnerModalReducer';
 
 // Combining multiple reducers
 const rootReducer = combineReducers({
   gameState: gameStateReducer,
   player: playerReducer,
   isGameFinished: gameStatusReducer,
+  showWinnerModal: winnerModalReducer
 });
 
 const store = configureStore({
