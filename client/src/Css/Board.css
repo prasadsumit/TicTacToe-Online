@@ -1,0 +1,30 @@
+:root {
+    --border-radius: 8px;
+    --border-width: 5px;
+    --sqaure-size: 150px;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: 4fr 4fr 4fr;
+    width: calc(3 * var(--sqaure-size) + 4 * var(--border-width));
+}
+
+.square {
+    width: var(--sqaure-size);
+    height: var(--sqaure-size);
+    border: var(--border-width) solid black;
+}
+
+.left {
+    border-left: none;
+}
+.right {
+    border-right: none;
+}
+.top {
+    border-top: none;
+}
+.bottom {
+    border-bottom: none;
+}

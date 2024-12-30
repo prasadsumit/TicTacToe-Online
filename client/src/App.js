@@ -1,11 +1,14 @@
-import Homepage from "./Pages/Homepage";
+import Homepage from './Pages/Homepage'
+import SideBarComponent from './Components/SidebarComponent'
+import './index.css'
 
 function App() {
-  return (
-    <div>
-      <Homepage />
-    </div>
-  );
+    return (
+        <div>
+            <Homepage />
+            <SideBarComponent />
+        </div>
+    )
 }
 
-export default App;
+export default App
