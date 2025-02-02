@@ -1,0 +1,53 @@
+/* Lobby Container */
+.lobby-container {
+    border-radius: 8px;
+    font-family: Arial, sans-serif;
+    width: 300px;
+    margin: 3rem auto;
+    font-family: "JetBrains Mono", monospace;
+}
+
+/* Header */
+.lobby-header{
+
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: left;
+    padding-left: 4px;
+}
+
+/* Player List Header */
+.player-header {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, 20px);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+/* Player Row */
+.player-row {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, 20px);
+    font-size: 14px;
+    padding: 5px 0;
+}
+
+.player-row span:first-child {
+    justify-content: flex-start;
+    padding-left: 4px;
+}
+
+.player-row.selected {
+    background: #C3C3C3;
+    font-weight: bolder;
+}
+
+
+.player-row span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

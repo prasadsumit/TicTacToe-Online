@@ -1,37 +1,38 @@
+import '../Css/Board.css'
+import JoinRoomComponent from './JoinRoomComponent'
 import ButtonComponent from './ButtonComponent'
 import TextComponent from './TextComponent'
-import '../Css/RoomAccessWidget.css'
 
-function RoomAccessWidget(props) {
-    const { config } = props
-    const textStyle = {
-        paddingLeft: '0',
-        fontSize: '16px',
-        marginBottom: '0',
-    }
-    const inputStyle = {
+export default function RoomAccessWidget(props) {
+    const style = {
+        width: '300px',
         padding: '5px',
-        border: 'solid 1px black',
-        borderRadius: '5px',
-        fontSize: '14px',
-        fontFamily: 'JetBrains Mono',
-        width: '80%',
+        position: 'relative',
+        marginTop: '50%',
     }
-    const containerStyle = {
-        display: 'flex',
+    const joinRoomConfig = {
+        info: 'Join an existing room',
+        placeholder: 'Enter room ID',
+        buttonText: 'Join',
+        onClick: () => {
+            alert('Room Joined')
+        },
+    }
+    const overrideStyle = {
+        textAlign: 'center',
         width: '100%',
-        alignItems: 'center',
+        marginLeft: '0',
+    }
+    const textStyle = {
+        margin: '10px 0',
+        textAlign: 'center',
+        fontSize: '16px',
     }
     return (
-        <div>
-            <TextComponent value={config.info} style={textStyle} />
-            <div style={containerStyle}>
-                <input type="text" id="roominputfield" name="roomid" placeholder={config.placeholder} style={inputStyle}/>
-                <ButtonComponent buttonText={config.buttonText} onClick={config.onClick}/>
-            </div>
-
+        <div style={style}>
+            <ButtonComponent buttonText="Create Room" onClick={props.onClick} overrideStyle = {overrideStyle}/>
+            <TextComponent value="or" style={textStyle}/>
+            <JoinRoomComponent config={joinRoomConfig} />
         </div>
     )
 }
-
-export default RoomAccessWidget
