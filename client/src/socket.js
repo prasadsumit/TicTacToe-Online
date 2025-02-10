@@ -1,0 +1,62 @@
+import React, { useState } from "react";
+import { io } from "socket.io-client";
+import {constants} from "./constants";
+
+// Connect to Socket.IO server
+const socket = io("http://localhost:5000");
+
+const Socket = () => {
+	const [roomId, setRoomId] = useState("");
+	const [userName, setUserName] = useState("");
+	const [message, setMessage] = useState("");
+
+	const createRoom = () => {
+		socket.emit(constants.CREATE_ROOM, userName,(response) => {
+			if (response.success) {
+				setMessage(response.message);
+			} else {
+				setMessage(response.message);
+			}
+		});
+	};
+
+	const joinRoom = () => {
+		socket.emit(constants.JOIN_ROOM, roomId, userName, (response) => {
+			if (response.success) {
+				setMessage(`Joined room: ${roomId}`);
+			} else {
+				setMessage(response.message);
+			}
+		});
+	};
+
+	return (
+		<div>
+			<h1>Socket.IO Tic Tac Toe</h1>
+
+			<div>
+				<input
+					type="text"
+					placeholder="Room Name"
+					value={roomId}
+					onChange={(e) => setRoomId(e.target.value)}
+				/>
+				<button onClick={createRoom}>Create Room</button>
+			</div>
+
+			<div>
+				<input
+					type="text"
+					placeholder="Username"
+					value={userName}
+					onChange={(e) => setUserName(e.target.value)}
+				/>
+				<button onClick={joinRoom}>Join Room</button>
+			</div>
+
+			<p>{message}</p>
+		</div>
+	);
+};
+
+export default Socket;
