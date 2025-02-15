@@ -1,0 +1,14 @@
+:root {
+    --border-radius: 8px;
+    --border-width: 4px;
+    --tile-height: 150px;
+    --tile-width: 200px;
+}
+
+.game-board {
+    display: grid;
+    grid-template-columns: 4fr 4fr 4fr;
+    width: calc(3 * var(--tile-width) + 4 * var(--border-width));
+}
+
+

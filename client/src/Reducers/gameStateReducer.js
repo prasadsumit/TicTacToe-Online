@@ -1,29 +1,31 @@
-import ActionTypes from "../Actions/ActionTypes";
-import initialState from "../Store/initialState";
+import ActionTypes from '../Actions/ActionTypes'
+import initialState from '../Store/initialState'
 
 const resetState = [
-  [0, 0, 0],
-  [0, 0, 0],
-  [0, 0, 0],
-];
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+]
 
-const initialGameState = initialState.gameState;
+const initialGameState = initialState.gameState
 
 const gameStateReducer = (state = initialGameState, action) => {
-  switch (action.type) {
+    switch (action.type) {
     case ActionTypes.UPDATE_TILE: {
-      let newGameState = state.map((row) => [...row]); // Deep copy of state
-      const { row, col, player } = action.payload;
-      newGameState[row][col] = player;
-      return newGameState; 
+        let newGameState = state.map((row) => {
+            return [ ...row ]
+        }) // Deep copy of state
+        const { row, col, player } = action.payload
+        newGameState[row][col] = player
+        return newGameState
     }
 
     case ActionTypes.RESET_TILE:
-      return resetState; 
+        return resetState
 
     default:
-      return state;
-  }
-};
+        return state
+    }
+}
 
-export default gameStateReducer;
+export default gameStateReducer

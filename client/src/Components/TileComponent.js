@@ -1,21 +1,22 @@
 import React from 'react'
+import '../Css/Tile.css'
 
-function TileComponent({value,onClick}) {
-    const itemStyle = {
-        padding: "20px",
-        border: "2px solid red",
-        "font-size": "50px"
+function TileComponent({ value, onClick, className }) {
+    const getIcon = (value) => {
+        let icon = null
+        if (value === 'x') {
+            icon = <span className="material-symbols-outlined fade-in"> close </span>
+        } else if (value === '0') {
+            icon = <span className="material-symbols-outlined fade-in"> radio_button_unchecked </span>
+        }
+        return icon
     }
 
-    const paraStyle = {
-        margin: "0",
-        "text-align": "center"
-    }
-  return (
-    <div onClick={onClick} style={itemStyle}>
-        <p style={paraStyle}>{value}</p>
-    </div>
-  )
+    return (
+        <div onClick={onClick} className={className}>
+            {getIcon(value)}
+        </div>
+    )
 }
 
 export default TileComponent
