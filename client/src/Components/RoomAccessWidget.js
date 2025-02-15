@@ -29,10 +29,12 @@ export default function RoomAccessWidget(props) {
         fontSize: '16px',
     }
     return (
-        <div style={style}>
-            <ButtonComponent buttonText="Create Room" onClick={props.onClick} overrideStyle = {overrideStyle}/>
-            <TextComponent value="or" style={textStyle}/>
-            <JoinRoomComponent config={joinRoomConfig} />
+        <div>
+            <div style={style}>
+                <ButtonComponent buttonText="Create Room" onClick={props.onClick} overrideStyle={overrideStyle}/>
+                <TextComponent value="or" style={textStyle}/>
+                <JoinRoomComponent config={joinRoomConfig}/>
+            </div>
         </div>
     )
 }

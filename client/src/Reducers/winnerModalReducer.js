@@ -1,16 +1,16 @@
-import ActionTypes from "../Actions/ActionTypes";
-import initialState from "../Store/initialState";
+import ActionTypes from '../Actions/ActionTypes'
+import initialState from '../Store/initialState'
 
-const initialWinnerModalState = initialState.showWinnerModal;
+const initialWinnerModalState = initialState.showWinnerModal
 
 const winnerModalReducer = (state = initialWinnerModalState, action) => {
-  switch (action.type) {
+    switch (action.type) {
     case ActionTypes.SHOW_WINNER_MODAL:
-      return action.payload.value;
+        return action.payload.value
 
     default:
-      return state;
-  }
-};
+        return state
+    }
+}
 
-export default winnerModalReducer;
+export default winnerModalReducer

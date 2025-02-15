@@ -17,7 +17,7 @@ function ModalWrapper() {
     return (
         <div> {
             isModalOpen ?
-                <Modal modalText={`Player ${player} wins`} buttonText={'New game'} onClick={() => {
+                <Modal modalText={`Player ${player} wins 🥳`} buttonText={'New game'} onClick={() => {
                     return handleResetGame()
                 }} /> :
                 <div></div>

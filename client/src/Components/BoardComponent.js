@@ -1,63 +1,64 @@
 import '../Css/Board.css'
-import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useRunGame } from '../Middleware/RunGame'
+import TileComponent from './TileComponent'
+import store from '../Store/store'
 
 export default function BoardComponent(props) {
-    const [ board, setBoard ] = useState(Array(9).fill(null))
-    const [ isXNext, setIsXNext ] = useState(true) // State to track the current player
+    const gameState = useSelector((state) => {
+        return state.gameState
+    })
+    const runGame = useRunGame()
 
-    // Handler for when a square is clicked
-    const handleClick = (index) => {
-        if (board[index]) {
-            return
-        } // Prevent changing a square that's already clicked
-
-        const newBoard = [ ...board ]
-        newBoard[index] = isXNext ? 'X' : 'O' // Set 'X' or 'O' based on the current player
-        setBoard(newBoard)
-        setIsXNext(!isXNext) // Switch turns
+    // Utility function to apply CSS classes based on square position
+    function getSquareClasses(rowIndex, colIndex) {
+        const classes = [ 'no-select' ]
+        if(rowIndex === 0) {
+            classes.push('top')
+        }
+        if(rowIndex === 2) {
+            classes.push('bottom')
+        }
+        if(colIndex === 0) {
+            classes.push('left')
+        }
+        if(colIndex === 2) {
+            classes.push('right')
+        }
+        return classes.join(' ')
     }
 
-    const getIcon = (value) => {
-        let icon = null
-        if (value === 'X') {
-            icon = <span className="material-symbols-outlined fade-in"> close </span>
-        } else if (value === 'O') {
-            icon = <span className="material-symbols-outlined fade-in"> radio_button_unchecked </span>
+    const handleClick = (rowIndex, colIndex) => {
+        console.log('inside handleClick')
+        const isTileEmpty = gameState[rowIndex][colIndex] === 0
+        const isGameFinished = store.getState().isGameFinished
+        if(isTileEmpty && !isGameFinished) {
+            runGame(rowIndex, colIndex)
         }
-        return icon
+        console.log('currentState', store.getState())
+    }
+
+    const symbolMap = {
+        0: '',
+        1: 'x',
+        2: '0',
     }
     return (
         <div className="game-board">
-            {board.map((value, index) => {
-                return <div
-                    key={index}
-                    className={`square ${getSquareClasses(index)}`}
-                    onClick={() => {
-                        return handleClick(index)
-                    }}
-                >
-                    {getIcon(value)}
-                </div>
+            {
+                gameState.map((el, rowIndex) => {
+                    return el.map((val, colIndex) => {
+                        return <TileComponent
+                            key = {`${rowIndex}-${colIndex}`}
+                            className = {`square ${getSquareClasses(rowIndex, colIndex)}`}
+                            value={symbolMap[val]}
+                            onClick={() => {
+                                return handleClick(rowIndex, colIndex)
+                            }}
+                        />
+                    })
+                })
             }
-            )}
         </div>
     )
-}
-
-// Utility function to apply CSS classes based on square position
-function getSquareClasses(index) {
-    const classes = []
-    if (index < 3) {
-        classes.push('top')
-    }
-    if (index > 5) {
-        classes.push('bottom')
-    }
-    if (index % 3 === 0) {
-        classes.push('left')
-    }
-    if (index % 3 === 2) {
-        classes.push('right')
-    }
-    return classes.join(' ')
 }

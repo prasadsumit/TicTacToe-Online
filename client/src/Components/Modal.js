@@ -1,8 +1,14 @@
 import React from 'react'
 import '../Css/Modal.css'
 import ButtonComponent from './ButtonComponent'
+import { startConfetti } from '../utils/animations'
+import { useEffect } from 'react'
 
 const Modal = ({ modalText, buttonText, onClick }) => {
+    useEffect(() => {
+        startConfetti()
+    }, [])
+
     const handleOverlayClick = (e) => {
         if (e.target.className === 'modal-overlay') {
             onClick() // Close the modal when clicking the overlay
