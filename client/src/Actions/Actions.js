@@ -18,6 +18,7 @@ export const resetTile = () => {
     return (dispatch) => {
         dispatch({ type: ActionTypes.RESET_TILE })
         dispatch(showWinnerModal(false))
+        dispatch(resetGame())
     }
 }
 
@@ -59,6 +60,48 @@ export const showWinnerModal = (value) => {
             payload: {
                 value: value
             }
+        })
+    }
+}
+
+export const showInputModal = (value, submitAction) => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.SHOW_INPUT_MODAL,
+            payload: {
+                value: value,
+                submitAction: submitAction
+            }
+        })
+    }
+}
+
+
+export const updateUserInfo = (userName) => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.UPDATE_USERINFO,
+            payload: {
+                userName: userName
+            }
+        })
+    }
+}
+
+export const initUserInfo = () => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.INIT_USERINFO,
+            payload: {}
+        })
+    }
+}
+
+export const resetGame = () => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.RESET_GAME,
+            payload: {}
         })
     }
 }

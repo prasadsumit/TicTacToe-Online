@@ -2,6 +2,9 @@ import '../Css/Board.css'
 import JoinRoomComponent from './JoinRoomComponent'
 import ButtonComponent from './ButtonComponent'
 import TextComponent from './TextComponent'
+import { useDispatch, useSelector } from 'react-redux'
+import { showInputModal } from '../Actions/Actions'
+import { constants as C } from '../constants'
 
 export default function RoomAccessWidget(props) {
     const style = {
@@ -28,10 +31,31 @@ export default function RoomAccessWidget(props) {
         textAlign: 'center',
         fontSize: '16px',
     }
+
+    const dispatch = useDispatch()
+    const userInfo = useSelector((state) => {
+        return state.userInfo
+    })
+
+    const createRoom = () => {
+        if(userInfo.name === '') {
+            dispatch(showInputModal(true, C.CREATE_ROOM))
+        }
+        // else execute create room logic
+        else {
+            createRoomLogic()
+        }
+    }
+
+    const createRoomLogic = () => {
+        console.log('Room Created')
+    }
+
+
     return (
         <div>
             <div style={style}>
-                <ButtonComponent buttonText="Create Room" onClick={props.onClick} overrideStyle={overrideStyle}/>
+                <ButtonComponent buttonText="Create Room" onClick={createRoom} overrideStyle={overrideStyle}/>
                 <TextComponent value="or" style={textStyle}/>
                 <JoinRoomComponent config={joinRoomConfig}/>
             </div>

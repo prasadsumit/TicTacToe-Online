@@ -1,5 +1,35 @@
 {
   "rooms": [
-
+    {
+      "id": "qsk3jt",
+      "players": {
+        "iamuuid": [
+          "radioman",
+          "Ej8HfdWjPWEpbki0AAAB"
+        ],
+        "newuuid": [
+          "ssss",
+          "DmCsyljfiNhF2epQAAAB"
+        ]
+      },
+      "isGameFinished": false,
+      "gameState": [
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0
+        ]
+      ]
+    }
   ]
 }

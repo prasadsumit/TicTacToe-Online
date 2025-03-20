@@ -6,6 +6,14 @@ const initialState = {
     ],
     player: 1,
     isGameFinished: false,
-    showWinnerModal: false
+    showWinnerModal: false,
+    inputModal: {
+        showInputModal: false,
+        submitAction: null,
+    },
+    userInfo: {
+        name: '',
+        id: '',
+    },
 }
 export default initialState

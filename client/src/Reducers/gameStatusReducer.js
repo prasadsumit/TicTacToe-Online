@@ -82,10 +82,13 @@ function evaluateIndex(row, col, gameState) {
 
 const gameStatusReducer = (state = initialGameStatus, action) => {
     switch (action.type) {
-    case ActionTypes.RUN_GAME_LOGIC:
+    case ActionTypes.RUN_GAME_LOGIC: {
         const { row, col, gameState } = action.payload
         //   let gameState = initialState.gameState.map((row) => [...row]);
         return evaluateIndex(row, col, gameState)
+    }
+    case ActionTypes.RESET_GAME:{ return false }
+
 
     default:
         return state

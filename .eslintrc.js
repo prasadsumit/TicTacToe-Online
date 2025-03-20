@@ -1,9 +1,12 @@
-var OFF = 0, WARN = 1, ERROR = 2
+let OFF = 0, WARN = 1, ERROR = 2
 module.exports = exports = {
     env: {
-        es6: true
+        es6: true,
+        node: true,
     },
-
+    parserOptions: {
+        sourceType: 'module'
+    },
     ecmaFeatures: {
         // env=es6 doesn't include modules, which we are using
         modules: true

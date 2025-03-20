@@ -2,22 +2,21 @@ const { generateRandomRoomId } = require("../id-generator");
 const {constants} = require("../constants");
 
 
-function socketCreateRoom(socket) {
-	return socket.on(constants.CREATE_ROOM, (userName,callback) => {
-
+ function socketCreateRoom(socket) {
+	return socket.on(constants.CREATE_ROOM, (userName,uuid,callback) => {
 		const roomId = generateRandomRoomId();
 		let room = constants.roomTemplate;
 		room = {
 			...room,
-			roomId: roomId
+			id: roomId
 		}
 		// Join the creator to the room
 		socket.join(roomId);
-		room.players[socket.id] = userName;
+		room.players[uuid] = [userName,socket.id];
 
 		//update in db
 		try {
-			const response = fetch("http://localhost:3001/rooms", {
+			const response = fetch("http://localhost:3030/rooms", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(room)})
@@ -30,3 +29,5 @@ function socketCreateRoom(socket) {
 	});
 
 }
+
+module.exports = { socketCreateRoom }
