@@ -16,14 +16,12 @@ const Socket = () => {
 
 
     const createRoom = () => {
-        socket.emit(constants.CREATE_ROOM, userName, uuid, (response) => {
-            if (response.success) {
-                setMessage(response.message)
-            } else {
-                setMessage(response.message)
-            }
-        })
+        socket.emit(constants.CREATE_ROOM, userName, uuid)
     }
+
+    socket.on(constants.ROOM_CREATED, () => {
+        setMessage('Room created')
+    })
 
     const joinRoom = () => {
         socket.emit(constants.JOIN_ROOM, roomId, userName, uuid, (response) => {

@@ -1,4 +1,4 @@
-const { constants } = require('../constants')
+const { constants } = require('../../../shared/constants')
 
 async function joinRoom(socket, io, roomId, userName, uuid, callback) {
 	try {

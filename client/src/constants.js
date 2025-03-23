@@ -1,5 +1,6 @@
 export const constants = {
-    CREATE_ROOM : 'createRoom',
-    JOIN_ROOM : 'joinRoom',
-    PLAYER_JOINED : 'playerJoined',
+    CREATE_ROOM : 'CREATE_ROOM',
+    ROOM_CREATED : 'ROOM_CREATED',
+    JOIN_ROOM : 'JOIN_ROOM',
+    PLAYER_JOINED : 'PLAYER_JOINED',
 }

@@ -1,5 +1,5 @@
 const { generateRandomRoomId } = require("../id-generator");
-const {constants} = require("../constants");
+const {constants} = require("../../../shared/constants");
 
 
  function socketCreateRoom(socket) {
