@@ -11,7 +11,6 @@ export default function RoomAccessWidget(props) {
         width: '300px',
         padding: '5px',
         position: 'relative',
-        marginTop: '50%',
     }
     const joinRoomConfig = {
         info: 'Join an existing room',

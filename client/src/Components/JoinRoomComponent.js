@@ -11,7 +11,7 @@ function JoinRoomComponent(props) {
     const textStyle = {
         paddingLeft: '0',
         fontSize: '16px',
-        marginBottom: '0',
+        marginBottom: '5px',
     }
     const inputStyle = {
         padding: '5px',
@@ -66,7 +66,7 @@ function JoinRoomComponent(props) {
                         return setInputValue(e.target.value)
                     }}
                 />
-                <ButtonComponent buttonText={config.buttonText} onClick={joinRoom}/>
+                <ButtonComponent buttonText={config.buttonText} onClick={config.onClick}/>
             </div>
 
         </div>

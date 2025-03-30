@@ -1,50 +1,96 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import TextComponent from '../Components/TextComponent'
 import ModalWrapper from '../Components/ModalWrapper'
 import BoardComponent from '../Components/BoardComponent'
-import SideBarComponent from '../Components/SidebarComponent'
 import RoomAccessWidget from '../Components/RoomAccessWidget'
+import RoomDetailsWidget from '../Components/RoomDetailsWidget'
 import InputModal from '../Components/InputModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { initUserInfo, showInputModal } from '../Actions/Actions'
 
 
-function Homepage() {
+function Homepage(props) {
     const pageTitle = 'tic-tac-toe'
+    const pageSubTitle = 'Play with friends in real time.'
+    const [ device, setDevice ] = useState('desktop')
+    const dispatch = useDispatch()
+
+    // Add resize listener
+    useEffect(() => {
+        const handleResize = () => {
+            const screenWidth = window.innerWidth
+            console.log(screenWidth)
+            if (screenWidth <= 600) {
+                setDevice('mobile')
+            } else if (screenWidth <= 800) {
+                setDevice('tablet')
+            } else if (screenWidth <= 1200) {
+                setDevice('laptop')
+            } else {
+                setDevice('desktop')
+            }
+        }
+
+        // Initial check
+        handleResize()
+
+        // Add event listener
+        window.addEventListener('resize', handleResize)
+
+        // Cleanup
+        return () => {
+            return window.removeEventListener('resize', handleResize)
+        }
+    }, [])
+
 
     const pageStyle = {
-        padding: '4rem',
+        padding: '1rem',
+        boxSizing: 'border-box'
     }
+
     const navBarStyle = {
-        display: 'flex',
-        justifyContent: 'space-between',
+        gap: device === 'mobile' ? '1rem' : '0',
+        alignItems: 'center',
     }
+
     const subPageStyle = {
-        padding: '100px',
+        padding: device === 'mobile' ? '1rem 0' :
+            device === 'tablet' ? '2rem 0' :
+                '100px',
         display: 'flex',
+        flexDirection: device === 'desktop' ? 'row' : 'column',
         justifyContent: 'center',
-        gap: '400px',
-        marginTop: '100px',
+        alignItems: 'center',
+        gap: device === 'mobile' ? '0.5rem' :
+            device === 'tablet' ? '1rem' :
+                '4rem',
+        width: '100%',
+        boxSizing: 'border-box',
     }
+
+    const subPageElement = {
+        transform: device === 'mobile' ? 'scale(0.60)' :
+            device === 'tablet' ? 'scale(0.75)' : 'scale(0.8)'
+    }
+
     const titleStyle = {
-        fontSize: '20px',
-        margin: '0',
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        margin: 0,
         padding: '16px 0',
+        textAlign: 'center'
     }
-    const navElementsStyle = {
-        fontSize: '20px',
-        margin: '0',
-        padding: '16px',
+    const subTitleStyle = {
+        fontSize: '1rem',
+        margin: 0,
+        textAlign: 'center'
     }
-    const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(initUserInfo())
     }, [])
 
-    let userInfo = useSelector((state) => {
-        return state.userInfo
-    })
     let isInputModalOpen = useSelector((state) => {
         return state.inputModal.showInputModal
     })
@@ -56,27 +102,24 @@ function Homepage() {
         }
     }
 
+    let room // fetch room and update
+
     return (
         <div style={pageStyle}>
             <ModalWrapper />
             <div>
-                {
-                    isInputModalOpen ?
-                        <InputModal modalText={'Enter Username:'} handleOverlayClick={handleOverlayClick}/> : <div></div>
-                }
+                {isInputModalOpen && <InputModal modalText={'Enter Username:'} handleOverlayClick={handleOverlayClick}/>}
             </div>
             <div style={navBarStyle}>
                 <TextComponent value={pageTitle} style={titleStyle}/>
-                <div style={{ background:'white', borderRadius:'4px', gap:'10px', display:'flex' }}>
-                    <TextComponent id={'username'} value={userInfo.name} style={navElementsStyle}/>
-                    <TextComponent id={'player-uuid'} value={userInfo.id} style={navElementsStyle}/>
-                </div>
+                <TextComponent value={pageSubTitle} style={subTitleStyle}/>
             </div>
             <div style={subPageStyle}>
-                <BoardComponent/>
-                <RoomAccessWidget />
+                <BoardComponent style={subPageElement}/>
+                {room === undefined ? <RoomAccessWidget /> :
+                    <RoomDetailsWidget room={room}/>
+                }
             </div>
-            <SideBarComponent />
         </div>
     )
 }

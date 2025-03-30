@@ -44,7 +44,7 @@ export default function BoardComponent(props) {
         2: '0',
     }
     return (
-        <div className="game-board">
+        <div className="game-board" style={props.style}>
             {
                 gameState.map((el, rowIndex) => {
                     return el.map((val, colIndex) => {
