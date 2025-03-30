@@ -36,11 +36,6 @@ class SocketService {
 
     }
 
-
-    joinRoom(socket, roomName) {
-        return true
-    }
-
 	async createRoom(socket, userName, uuid) {
 
 		const roomId = generateRandomRoomId();
@@ -63,15 +58,45 @@ class SocketService {
 
 		//update in db
 		await dbService.createRoom(room)
-		this.emitToRoom(roomId,constants.ROOM_CREATED)
+		this.emitToRoom(roomId,constants.ROOM_CREATED, {roomId: roomId, message: 'Room created'})
 
     }
 
-    emitToRoom(roomName, event, data) {
+	async joinRoom(socket, roomId, userName, uuid) {
+		//fetch current room data
+		const currentRoom = await dbService.getRoomByRoomId(roomId)
+		if(!currentRoom){
+			this.emitToRoom(roomId, constants.ROOM_NOT_FOUND, {message: 'Room not found'})
+			return
+		}
+		if(currentRoom.players.length >= 2){
+			this.emitToRoom(roomId, constants.ROOM_FULL, {message: 'Room is full'})
+			return
+		}
+
+		let updatedPlayers = {
+			players: {
+				...currentRoom.players,
+				[uuid]: {
+					player: {
+						userName: userName,
+						socketId: socket.id
+					}
+				}
+			}
+		}
+		// Join user to the room
+		socket.join(roomId)
+		//update in db
+		await dbService.updateRoomByRoomId(roomId, updatedPlayers)
+		this.emitToRoom(roomId,constants.ROOM_JOINED, {roomId: roomId, message: 'Room joined'})
+	}
+
+    emitToRoom(roomId, event, data) {
         if (!this.io) {
             throw new Error('Socket service not initialized')
         }
-        this.io.to(roomName).emit(event, data)
+        this.io.to(roomId).emit(event, data)
     }
 }
 

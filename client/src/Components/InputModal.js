@@ -1,11 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import '../Css/Modal.css'
 import ButtonComponent from './ButtonComponent'
 import { useDispatch, useSelector } from 'react-redux'
-import { showInputModal, updateUserInfo } from '../Actions/Actions'
+import { evaluateAction, showInputModal, updateUserInfo } from '../Actions/Actions'
 import { constants as C } from '../constants'
+import { SocketContext } from '../context/SocketContext'
+
 
 const InputModal = ({ modalText, handleOverlayClick }) => {
+    const socket = useContext(SocketContext)
     const fieldLabelStyle = {
         fontSize: '14px',
         margin: '0 0 5px',
@@ -16,27 +19,21 @@ const InputModal = ({ modalText, handleOverlayClick }) => {
     const submitOperation = useSelector((state) => {
         return state.inputModal.submitAction
     })
+    const userInfo = useSelector((state) => {
+        return state.userInfo
+    })
+    const inputRoomId = useSelector((state) => {
+        return state.inputModal.inputRoomId
+    })
 
     const dispatch = useDispatch()
     const submitAction = () => {
         // dispatch action to submit input
         if(inputValue !== '') {
-            dispatch(updateUserInfo(inputValue))
-            dispatch(showInputModal(false, null))
-            if(submitOperation === C.CREATE_ROOM) {
-                createRoomLogic()
-            }else if(submitOperation === C.JOIN_ROOM) {
-                joinRoomLogic()
-            }
+            dispatch(evaluateAction(submitOperation, inputValue, inputRoomId, socket))
+        }else{
+            console.log('Please enter a valid name')
         }
-    }
-
-    const createRoomLogic = () => {
-        console.log('Room Created through submit')
-    }
-
-    const joinRoomLogic = () => {
-        console.log('Room Joined through submit')
     }
 
     return (

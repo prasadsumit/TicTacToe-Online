@@ -1,4 +1,6 @@
 import ActionTypes from './ActionTypes'
+import { constants, constants as C } from '../constants'
+import { v4 as uuidv4 } from 'uuid'
 
 export const updateTile = (row, col) => {
     return (dispatch, getState) => {
@@ -64,36 +66,42 @@ export const showWinnerModal = (value) => {
     }
 }
 
-export const showInputModal = (value, submitAction) => {
+export const showInputModal = (value, submitAction, roomId = null) => {
     return (dispatch) => {
         dispatch({
             type: ActionTypes.SHOW_INPUT_MODAL,
             payload: {
                 value: value,
-                submitAction: submitAction
+                submitAction: submitAction,
+                roomId: roomId,
             }
         })
     }
 }
 
 
-export const updateUserInfo = (userName) => {
+export const updateUserInfo = (userInfo) => {
     return (dispatch) => {
         dispatch({
             type: ActionTypes.UPDATE_USERINFO,
             payload: {
-                userName: userName
+                userInfo: userInfo
             }
         })
     }
 }
 
 export const initUserInfo = () => {
+    let userInfo = sessionStorage.getItem('userInfo')
     return (dispatch) => {
-        dispatch({
-            type: ActionTypes.INIT_USERINFO,
-            payload: {}
-        })
+        if(userInfo) {
+            dispatch({
+                type: ActionTypes.UPDATE_USERINFO,
+                payload: {
+                    userInfo: JSON.parse(userInfo)
+                }
+            })
+        }
     }
 }
 
@@ -105,3 +113,48 @@ export const resetGame = () => {
         })
     }
 }
+
+export const createRoom = (userInfo, socket) => {
+    socket.emit(constants.CREATE_ROOM, userInfo.name, userInfo.id)
+    return (dispatch) => {
+        dispatch(showInputModal(false, null))
+    }
+}
+
+export const joinRoom = (roomId, userInfo, socket) => {
+    socket.emit(constants.JOIN_ROOM, roomId, userInfo.name, userInfo.id)
+    return (dispatch) => {
+        dispatch(showInputModal(false, null))
+    }
+}
+
+export const evaluateAction = (action, userName, roomId, socket) => {
+    return (dispatch) => {
+        let uuid = uuidv4()
+        let userInfo = {
+            name: userName,
+            id: uuid
+        }
+        if(action === C.CREATE_ROOM) {
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+            dispatch(createRoom(userInfo, socket))
+            dispatch(updateUserInfo(userInfo))
+        }else if(action === C.JOIN_ROOM) {
+            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+            dispatch(updateUserInfo(userInfo))
+            dispatch(joinRoom(roomId, userInfo, socket))
+        }
+    }
+}
+
+export const updateRoomId = (roomId) => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.UPDATE_ROOM_ID,
+            payload: {
+                roomId: roomId
+            }
+        })
+    }
+}
+

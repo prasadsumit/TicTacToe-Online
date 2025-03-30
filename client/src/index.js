@@ -3,13 +3,16 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import store from './Store/store'
 import { Provider } from 'react-redux'
+import { SocketContext, socket } from './context/SocketContext'
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
     <React.StrictMode>
-        <Provider store={store}>
-            <App />
-        </Provider>
+        <SocketContext.Provider value={socket}>
+            <Provider store={store}>
+                <App />
+            </Provider>
+        </SocketContext.Provider>
     </React.StrictMode>
 )
 

@@ -3,10 +3,41 @@ import JoinRoomComponent from './JoinRoomComponent'
 import ButtonComponent from './ButtonComponent'
 import TextComponent from './TextComponent'
 import { useDispatch, useSelector } from 'react-redux'
-import { showInputModal } from '../Actions/Actions'
-import { constants as C } from '../constants'
+import { showInputModal, updateRoomId } from '../Actions/Actions'
+import { constants, constants as C } from '../constants'
+import { useEffect, useContext } from 'react'
+import { SocketContext } from '../context/SocketContext'
+import { useNavigate } from 'react-router-dom'
+
 
 export default function RoomAccessWidget(props) {
+    const socket = useContext(SocketContext)
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const roomId = useSelector((state) => {
+        return state.roomId
+    })
+    useEffect(() => {
+        if(roomId) {
+            navigate(`/tic-tac-toe/room/${roomId}`)
+        }
+    }, [ roomId ])
+
+    socket.on('connect', () => {
+        document.title = `Player: ${socket.id}`
+    })
+
+    socket.on(constants.ROOM_CREATED, (receivedData) => {
+        console.log(`Room created with ID: ${receivedData.roomId}`)
+        dispatch(updateRoomId(receivedData.roomId))
+    })
+
+    socket.on(constants.ROOM_JOINED, (receivedData) => {
+        console.log(`Room joined with ID: ${receivedData.roomId}`)
+        dispatch(updateRoomId(receivedData.roomId))
+    })
+
+
     const style = {
         width: '300px',
         padding: '5px',
@@ -17,9 +48,6 @@ export default function RoomAccessWidget(props) {
         info: 'Join an existing room',
         placeholder: 'Enter room ID',
         buttonText: 'Join',
-        onClick: () => {
-            alert('Room Joined')
-        },
     }
     const overrideStyle = {
         textAlign: 'center',
@@ -32,23 +60,12 @@ export default function RoomAccessWidget(props) {
         fontSize: '16px',
     }
 
-    const dispatch = useDispatch()
     const userInfo = useSelector((state) => {
         return state.userInfo
     })
 
     const createRoom = () => {
-        if(userInfo.name === '') {
-            dispatch(showInputModal(true, C.CREATE_ROOM))
-        }
-        // else execute create room logic
-        else {
-            createRoomLogic()
-        }
-    }
-
-    const createRoomLogic = () => {
-        console.log('Room Created')
+        dispatch(showInputModal(true, C.CREATE_ROOM))
     }
 
 

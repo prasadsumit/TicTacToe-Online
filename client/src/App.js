@@ -1,10 +1,11 @@
 import Homepage from './Pages/Homepage'
 import './index.css'
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import RoomPage from './Pages/RoomPage'
 import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import Socket from './socket'
+
 
 function Test() {
     const [ message, setMessage ] = useState('Loading...')
@@ -35,7 +36,25 @@ function Test() {
     )
 }
 
-let roomIds = [ 'abc', 'def' ]
+function RoomValidator() {
+    const { roomId } = useParams()
+    const [ isValid, setIsValid ] = useState(null)
+
+    useEffect(() => {
+        axios.get(`http://localhost:5000/room/${roomId}`)
+            .then((response) => {
+                return setIsValid(response !== null)
+            })
+            .catch(() => {
+                return setIsValid(false)
+            })
+    }, [ roomId ])
+
+    if (isValid === null) {
+        return <h2>Loading...</h2>
+    }
+    return isValid ? <RoomPage /> : <h2>404: Room Not Found</h2>
+}
 
 function App() {
     return (
@@ -43,11 +62,7 @@ function App() {
             <Routes>
                 <Route path="/" element={<Navigate to="/tic-tac-toe/" />} />
                 <Route path="/tic-tac-toe/" element={<Homepage />} />
-                {
-                    roomIds.map((id) => {
-                        return <Route key={id} path={`/tic-tac-toe/room/${id}`} element={<RoomPage />} />
-                    })
-                }
+                <Route path="/tic-tac-toe/room/:roomId" element={<RoomValidator />} />
                 <Route path="/test/*" element={<Test />} />
                 <Route path="/abcd/*" element={<Socket/>} />
                 <Route path="*" element={<h2 style={{ fontFamily: 'TimesNewRoman' }}>404: Page Not Found</h2>} />

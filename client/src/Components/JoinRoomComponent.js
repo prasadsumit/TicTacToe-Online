@@ -1,7 +1,7 @@
 import ButtonComponent from './ButtonComponent'
 import TextComponent from './TextComponent'
 import '../Css/RoomAccessWidget.css'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { showInputModal } from '../Actions/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { constants as C } from '../constants'
@@ -26,8 +26,7 @@ function JoinRoomComponent(props) {
         width: '100%',
         alignItems: 'center',
     }
-    const [ inputValue, setInputValue ] = useState('')
-
+    const inputRef = useRef(null)
 
     const dispatch = useDispatch()
     const userInfo = useSelector((state) => {
@@ -35,38 +34,51 @@ function JoinRoomComponent(props) {
     })
 
     const joinRoom = () => {
-        if(inputValue === '') {
-            alert('Please enter a room ID')
-            return
-        }
-        if(userInfo.name === '') {
-            dispatch(showInputModal(true, C.JOIN_ROOM))
-        }else{
-            joinRoomLogic()
+        if (inputRef.current) {
+            let inputRoomId = inputRef.current.value
+            dispatch(showInputModal(true, C.JOIN_ROOM, inputRoomId))
         }
     }
 
-    const joinRoomLogic = () => {
-        console.log('Room Joined')
+    const copyToClipBoard = () => {
+        if (inputRef.current) {
+            navigator.clipboard.writeText(inputRef.current.value)
+                .then(() => {
+                    return alert('Copied to clipboard!')
+                })
+                .catch((err) => {
+                    return console.error('Failed to copy: ', err)
+                })
+        }
     }
 
+    const btnAction = () => {
+        if(config.buttonText === 'Join') {
+            joinRoom()
+        }else if(config.buttonText === 'Copy') {
+            copyToClipBoard()
+        }
+    }
 
+    if(config.buttonText === 'Copy') {
+        inputStyle.pointerEvents = 'none'
+        inputStyle.color = '#888'
+    }
     return (
         <div>
             <TextComponent value={config.info} style={textStyle} />
             <div style={containerStyle}>
                 <input
+                    ref={inputRef}
                     type="text"
                     id="roominputfield"
                     name="roomid"
                     placeholder={config.placeholder}
                     style={inputStyle}
-                    value={inputValue}
-                    onChange={(e) => {
-                        return setInputValue(e.target.value)
-                    }}
+                    value={config.roomId}
+                    readOnly={config.buttonText === 'Copy'}
                 />
-                <ButtonComponent buttonText={config.buttonText} onClick={joinRoom}/>
+                <ButtonComponent buttonText={config.buttonText} onClick={btnAction}/>
             </div>
 
         </div>

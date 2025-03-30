@@ -8,6 +8,7 @@ import { thunk } from 'redux-thunk'
 import winnerModalReducer from '../Reducers/winnerModalReducer'
 import inputModalReducer from '../Reducers/inputModalReducer'
 import userInfoReducer from '../Reducers/userInfoReducer'
+import Reducer from '../Reducers/Reducer'
 
 // Combining multiple reducers
 const rootReducer = combineReducers({
@@ -20,10 +21,7 @@ const rootReducer = combineReducers({
 })
 
 const store = configureStore({
-    reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => {
-        return getDefaultMiddleware().concat(thunk)
-    }, // Add thunk as middleware
+    reducer: Reducer,
     preloadedState: initialState, // Correctly set initial state
 })
 

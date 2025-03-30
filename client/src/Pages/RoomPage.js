@@ -7,10 +7,32 @@ import Lobby from '../Components/Lobby'
 import JoinRoomComponent from '../Components/JoinRoomComponent'
 import InputModal from '../Components/InputModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { initUserInfo } from '../Actions/Actions'
+import { initUserInfo, updateRoomId } from '../Actions/Actions'
 
+
+const fetchRoomId = () => {
+    const url = window.location.pathname
+    const parts = url.split('/')
+    const roomId = parts[parts.length - 1] // Get the last segment
+    return roomId
+}
 
 function RoomPage() {
+    const dispatch = useDispatch()
+    let roomId = fetchRoomId()
+
+    useEffect(() => {
+        dispatch(updateRoomId(roomId))
+    }, [])
+
+    let userInfo = useSelector((state) => {
+        return state.userInfo
+    })
+    let isInputModalOpen = useSelector((state) => {
+        return state.showInputModal
+    })
+
+
     const pageTitle = 'tic-tac-toe'
 
     const pageStyle = {
@@ -45,25 +67,16 @@ function RoomPage() {
 
     const invitePlayersConfig = {
         info: 'Invite a friend to this room: ',
-        placeholder: '#fghajdjh',
         buttonText: 'Copy',
-        onClick: () => {
-            alert('Copied to clipboard!')
-        },
+        placeholder: 'Enter a room ID',
+        roomId: roomId ? roomId : 'No room ID',
     }
 
-    const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(initUserInfo())
     }, [])
 
-    let userInfo = useSelector((state) => {
-        return state.userInfo
-    })
-    let isInputModalOpen = useSelector((state) => {
-        return state.showInputModal
-    })
 
     return (
         <div style={pageStyle}>

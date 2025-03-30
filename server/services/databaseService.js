@@ -6,7 +6,8 @@ class DatabaseService {
 		try {
 			return await Room.create(roomInfo)
 		} catch (error) {
-			throw new Error(`Error creating room: ${error.message}`)
+			console.log(`Error creating room: ${error.message}`)
+			return null
 		}
 	}
 
@@ -14,19 +15,22 @@ class DatabaseService {
 		try {
 			return await Room.find(filter).sort(sort)
 		} catch (error) {
-			throw new Error(`Error fetching items: ${error.message}`)
+			console.log(`Error fetching items: ${error.message}`)
+			return null
 		}
 	}
 
 	async getRoomByRoomId(id) {
 		try {
-			const room = await Room.findOne({ roomId: id });
+			const room = await Room.findOne({ roomId: id }).lean();
 			if (!room) {
-				throw new Error('Room not found')
+				console.log('Room not found')
+				return null
 			}
 			return room;
 		} catch (error) {
-			throw new Error(`Error fetching Room: ${error.message}`)
+			console.log(`Error fetching Room: ${error.message}`)
+			return null
 		}
 	}
 
@@ -40,7 +44,8 @@ class DatabaseService {
 				{new: true, runValidators: true}
 			);
 		} catch (error) {
-			throw new Error(`Error updating item: ${error.message}`);
+			console.log(`Error updating item: ${error.message}`)
+			return null
 		}
 	}
 }

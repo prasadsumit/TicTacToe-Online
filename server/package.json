@@ -5,7 +5,8 @@
     "express": "^4.21.2",
     "json-server": "^1.0.0-beta.3",
     "mongoose": "^8.12.2",
-    "socket.io": "^4.8.1"
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0"
   },
   "scripts": {
     "server": "node server.js",

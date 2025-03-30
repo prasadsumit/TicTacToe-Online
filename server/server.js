@@ -38,14 +38,6 @@ mongoose.connect(process.env.MONGODB_URI)
     })
 
 
-// socket connection
-// const io = new Server(server, {
-//     cors: {
-//         origin: 'http://localhost:3000', // Update to match your client origin
-//         methods: [ 'GET', 'POST' ]
-//     }
-// })
-
 const io = socketService.initialize(server, {
     cors: {
         origin: process.env.CLIENT_URL || 'http://localhost:3000',
@@ -58,20 +50,18 @@ const io = socketService.initialize(server, {
 // When a client connects
 io.on('connection', (socket) => {
 
-    // socketCreateRoom(socket)
-    //
-    // socketJoinRoom(socket, io)
-
-    // Handle disconnection
-    // socket.on('disconnect', () => {
-    //     console.log('A user disconnected', socket.id)
-    //     // Remove the user from any rooms (pseudo code below)
-    //     // removeUserFromRooms(socket.id)
-    // })
-
     socket.on(constants.CREATE_ROOM, async (userName, uuid) => {
+        console.log('Create Room request received')
         await socketService.createRoom( socket, userName, uuid)
     })
+
+    socket.on(constants.JOIN_ROOM, async (roomId, userName, uuid) => {
+        console.log('Join Room request received with room ID: ', roomId)
+        await socketService.joinRoom( socket, roomId, userName, uuid)
+    })
 })
+
+
+
 
 

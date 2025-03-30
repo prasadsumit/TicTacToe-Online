@@ -10,10 +10,12 @@ const initialState = {
     inputModal: {
         showInputModal: false,
         submitAction: null,
+        inputRoomId: null,
     },
     userInfo: {
         name: '',
         id: '',
     },
+    roomId: null,
 }
 export default initialState

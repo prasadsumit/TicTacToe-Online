@@ -1,6 +1,27 @@
 import ActionTypes from '../Actions/ActionTypes'
+import initialState from '../Store/initialState'
+import { v4 as uuidv4 } from 'uuid'
+
+const resetState = [
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+]
 
 const evaluateIndex = (row, col, gameState) => {
+    if (!gameState || !Array.isArray(gameState) || !Array.isArray(gameState[0])) {
+        throw new Error('Invalid gameState structure')
+    }
+
+    if (
+        row < 0 ||
+		row >= gameState.length ||
+		col < 0 ||
+		col >= gameState[row].length
+    ) {
+        throw new Error(`Invalid row or col: row=${row}, col=${col}`)
+    }
+
     let value = gameState[row][col]
 
     // left-diagonal
@@ -64,49 +85,76 @@ const evaluateIndex = (row, col, gameState) => {
     return false
 }
 
-const tileReducer = (state, action) => {
+const Reducer = (state = initialState, action) => {
     switch (action.type) {
-    // update tile
     case ActionTypes.UPDATE_TILE:
-        let newGameState = state.gameState
-        const rowIndex = action.payload.row
-        const colIndex = action.payload.col
-        newGameState[rowIndex][colIndex] = state.player
         return {
             ...state,
-            gameState: newGameState,
+            gameState: ((currState = state.gameState) => {
+                let newGameState = currState.map((row) => {
+                    return [ ...row ]
+                }) // Deep copy of state
+                const { row, col, player } = action.payload
+                newGameState[row][col] = player
+                return newGameState
+            })()
         }
-        // reset tile
-    case ActionTypes.RESET_TILE:
-        const zeroState = [
-            [ 0, 0, 0 ],
-            [ 0, 0, 0 ],
-            [ 0, 0, 0 ]
-        ]
-        return {
-            ...state,
-            gameState: zeroState
-        }
-        // change player
-    case ActionTypes.CHANGE_PLAYER:
-        let newPlayer = action.payload.player
-        let player = state.player
-        if (newPlayer === -1) {
-            player = player === 1 ? 2 : 1
-        } else {
-            player = newPlayer
-        }
-        return {
-            ...state,
-            player: player
-        }
-        // run game logic
-    case ActionTypes.RUN_GAME_LOGIC:
-        let row = action.payload.row
-        let col = action.payload.col
-        let isGameFinished = evaluateIndex(row, col, state.gameState)
 
-        return isGameFinished ? { ...state, isGameFinished: true } : state
+    case ActionTypes.RESET_TILE:
+        return {
+            ...state,
+            gameState: resetState
+        }
+
+    case ActionTypes.CHANGE_PLAYER:
+        return {
+            ...state,
+            player: action.payload.player !== -1 ?
+                action.payload.player :
+                state.player === 1 ? 2 : 1
+        }
+
+    case ActionTypes.RUN_GAME_LOGIC: {
+        const { row, col, gameState } = action.payload
+        return {
+            ...state,
+            isGameFinished: evaluateIndex(row, col, gameState)
+        }
+    }
+
+    case ActionTypes.SHOW_WINNER_MODAL:
+        return {
+            ...state,
+            showWinnerModal: action.payload.value
+        }
+
+    case ActionTypes.SHOW_INPUT_MODAL:
+        return {
+            ...state,
+            inputModal: {
+                showInputModal: action.payload.value,
+                submitAction: action.payload.submitAction,
+                inputRoomId: action.payload.roomId,
+            }
+        }
+
+    case ActionTypes.UPDATE_USERINFO:
+        return {
+            ...state,
+            userInfo: action.payload.userInfo
+        }
+
+    case ActionTypes.UPDATE_ROOM_ID:
+        return {
+            ...state,
+            roomId: action.payload.roomId
+        }
+
+    case ActionTypes.RESET_GAME:
+        return {
+            ...state,
+            isGameFinished: false
+        }
 
 
     default:
@@ -114,4 +162,5 @@ const tileReducer = (state, action) => {
     }
 }
 
-export default tileReducer
+export default Reducer
+
