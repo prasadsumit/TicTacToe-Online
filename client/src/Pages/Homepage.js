@@ -7,6 +7,8 @@ import RoomDetailsWidget from '../Components/RoomDetailsWidget'
 import InputModal from '../Components/InputModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { initUserInfo, showInputModal } from '../Actions/Actions'
+import { useParams } from 'react-router-dom'
+import axios from 'axios'
 
 
 function Homepage(props) {
@@ -14,12 +16,13 @@ function Homepage(props) {
     const pageSubTitle = 'Play with friends in real time.'
     const [ device, setDevice ] = useState('desktop')
     const dispatch = useDispatch()
+    const { roomId } = useParams()
+    const [ room, setRoom ] = useState(null)
 
     // Add resize listener
     useEffect(() => {
         const handleResize = () => {
             const screenWidth = window.innerWidth
-            console.log(screenWidth)
             if (screenWidth <= 600) {
                 setDevice('mobile')
             } else if (screenWidth <= 800) {
@@ -87,9 +90,17 @@ function Homepage(props) {
         textAlign: 'center'
     }
 
+    let userInfo = sessionStorage.getItem('userInfo')
+
     useEffect(() => {
-        dispatch(initUserInfo())
-    }, [])
+        axios.get(`http://localhost:5000/room/${roomId}`)
+            .then((response) => {
+                return setRoom(response.data)
+            })
+            .catch(() => {
+                return setRoom(null)
+            })
+    }, [ userInfo ])
 
     let isInputModalOpen = useSelector((state) => {
         return state.inputModal.showInputModal
@@ -101,8 +112,6 @@ function Homepage(props) {
             dispatch(showInputModal(false, null))
         }
     }
-
-    let room // fetch room and update
 
     return (
         <div style={pageStyle}>
@@ -116,8 +125,8 @@ function Homepage(props) {
             </div>
             <div style={subPageStyle}>
                 <BoardComponent style={subPageElement}/>
-                {room === undefined ? <RoomAccessWidget /> :
-                    <RoomDetailsWidget room={room}/>
+                {userInfo && room ? <RoomDetailsWidget room={room}/> :
+                    <RoomAccessWidget />
                 }
             </div>
         </div>

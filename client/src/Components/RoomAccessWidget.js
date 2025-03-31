@@ -43,9 +43,9 @@ export default function RoomAccessWidget(props) {
         padding: '5px',
         position: 'relative',
     }
-    const joinRoomConfig = {
+    let joinRoomConfig = {
         info: 'Join an existing room',
-        placeholder: 'Enter room ID',
+        placeholder: roomId || 'Enter room ID',
         buttonText: 'Join',
     }
     const overrideStyle = {

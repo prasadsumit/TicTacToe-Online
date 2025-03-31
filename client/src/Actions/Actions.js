@@ -81,6 +81,7 @@ export const showInputModal = (value, submitAction, roomId = null) => {
 
 
 export const updateUserInfo = (userInfo) => {
+    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
     return (dispatch) => {
         dispatch({
             type: ActionTypes.UPDATE_USERINFO,
@@ -129,20 +130,18 @@ export const joinRoom = (roomId, userInfo, socket) => {
 }
 
 export const evaluateAction = (action, userName, roomId, socket) => {
-    return (dispatch) => {
+    return async(dispatch) => {
         let uuid = uuidv4()
         let userInfo = {
             name: userName,
             id: uuid
         }
-        if(action === C.CREATE_ROOM) {
-            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
-            dispatch(createRoom(userInfo, socket))
+        if (action === C.CREATE_ROOM) {
+            await dispatch(createRoom(userInfo, socket))
             dispatch(updateUserInfo(userInfo))
-        }else if(action === C.JOIN_ROOM) {
-            sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+        } else if (action === C.JOIN_ROOM) {
+            await dispatch(joinRoom(roomId, userInfo, socket))
             dispatch(updateUserInfo(userInfo))
-            dispatch(joinRoom(roomId, userInfo, socket))
         }
     }
 }

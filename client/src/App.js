@@ -53,7 +53,7 @@ function RoomValidator() {
     if (isValid === null) {
         return <h2>Loading...</h2>
     }
-    return isValid ? <RoomPage /> : <h2>404: Room Not Found</h2>
+    return isValid ? <Homepage /> : <h2>404: Room Not Found</h2>
 }
 
 function App() {

@@ -10,8 +10,6 @@
   },
   "scripts": {
     "server": "node server.js",
-    "db": "npx json-server --watch db.json --port 3030",
-    "start": "npm-run-all --parallel db server ",
     "dev": "nodemon server.js"
   },
   "devDependencies": {
