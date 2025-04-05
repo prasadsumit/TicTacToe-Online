@@ -42,7 +42,8 @@ class SocketService {
 		let room = {
 			...constants.roomTemplate,
 			roomId: roomId,
-			players: new Map()
+			players: new Map(),
+			playerTurn: uuid,
 		};
 
 		room.players.set(uuid, {

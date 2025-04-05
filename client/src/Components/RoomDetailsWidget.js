@@ -1,13 +1,15 @@
 import Lobby from './Lobby'
 import JoinRoomComponent from './JoinRoomComponent'
-import { useContext, useEffect } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { constants, constants as C } from '../constants'
 import { useDispatch } from 'react-redux'
 import { showAlert, updateRoom } from '../Actions/Actions'
+import TextComponent from './TextComponent'
 
 function RoomDetailsWidget(props) {
     const dispatch = useDispatch()
+    const maxPlayers = 2
     let { room, userInfo } = props
     const currentPlayers = room.players
     const roomId = room.roomId
@@ -15,6 +17,7 @@ function RoomDetailsWidget(props) {
     const socket = useContext(SocketContext)
     userInfo = JSON.parse(userInfo)
     const oldSocketId = room.players[userInfo.id].player.socketId
+    const [ playerTurnMessage, setPlayerTurnMessage ] = useState(null)
     // Handle socket reconnection on component mount or socket change
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
@@ -54,6 +57,14 @@ function RoomDetailsWidget(props) {
         return () => {}
     }, [ socket ])
 
+    useEffect(() => {
+        if(room.playerTurn !== userInfo.id) {
+            setPlayerTurnMessage('Wait for your turn.')
+        } else {
+            setPlayerTurnMessage('It\'s your turn. Make a move.')
+        }
+    }, [ room ])
+
     const invitePlayersConfig = {
         info: 'Invite a friend to this room: ',
         placeholder: 'Room ID',
@@ -61,20 +72,33 @@ function RoomDetailsWidget(props) {
         roomId: roomId,
     }
 
-    Object.keys(currentPlayers).forEach((playerObj) => {
+    const textStyle = {
+        paddingLeft: '0',
+        fontSize: '16px',
+        marginBottom: '5px',
+    }
+
+
+    Object.keys(currentPlayers).forEach((player) => {
+        let playerObj = currentPlayers[player].player
         players.push({
-            name: currentPlayers[playerObj].player.userName,
-            wins: 3,
-            draws: 0,
-            losses: 1,
-            selected: true
+            name: playerObj.userName,
+            wins: playerObj.wins,
+            draws: playerObj.draws,
+            losses: playerObj.losses,
+            selected: room.playerTurn === player
         })
     })
 
     return (
         <div>
             <Lobby players={players}/>
-            <JoinRoomComponent config={invitePlayersConfig}/>
+            {
+                players.length < maxPlayers && <JoinRoomComponent config={invitePlayersConfig} />
+            }
+            {
+                playerTurnMessage && players.length === maxPlayers && <TextComponent value={playerTurnMessage} style={textStyle}/>
+            }
         </div>
     )
 }

@@ -40,13 +40,15 @@ function RoomValidator() {
     const [ isValid, setIsValid ] = useState(null)
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/room/${roomId}`)
-            .then((response) => {
-                return setIsValid(response !== null)
-            })
-            .catch(() => {
-                return setIsValid(false)
-            })
+        if (roomId) {
+            axios.get(`http://localhost:5000/room/${roomId}`)
+                .then((response) => {
+                    return setIsValid(response !== null)
+                })
+                .catch(() => {
+                    return setIsValid(false)
+                })
+        }
     }, [ roomId ])
 
     if (isValid === null) {
