@@ -1,6 +1,7 @@
 import ActionTypes from './ActionTypes'
 import { constants, constants as C } from '../constants'
 import { v4 as uuidv4 } from 'uuid'
+import { fetchRoomData } from '../utils/requests'
 
 export const updateTile = (row, col) => {
     return (dispatch, getState) => {
@@ -153,6 +154,42 @@ export const updateRoomId = (roomId) => {
             payload: {
                 roomId: roomId
             }
+        })
+    }
+}
+
+export const updateRoom = (roomId) => {
+    return async(dispatch) => {
+        try {
+            const room = await fetchRoomData(roomId)
+            dispatch({
+                type: ActionTypes.UPDATE_ROOM,
+                payload: {
+                    room: room
+                }
+            })
+        } catch (error) {
+            console.log('Failed to update room:', error)
+        }
+    }
+}
+
+export const showAlert = (alertOptions) => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.SHOW_ALERT,
+            payload: {
+                ...alertOptions
+            }
+        })
+    }
+}
+
+export const closeAlert = () => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.CLOSE_ALERT,
+            payload: {}
         })
     }
 }

@@ -6,9 +6,9 @@ import RoomAccessWidget from '../Components/RoomAccessWidget'
 import RoomDetailsWidget from '../Components/RoomDetailsWidget'
 import InputModal from '../Components/InputModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { initUserInfo, showInputModal } from '../Actions/Actions'
+import { showInputModal, updateRoom } from '../Actions/Actions'
 import { useParams } from 'react-router-dom'
-import axios from 'axios'
+import Alert from '../Components/Alert'
 
 
 function Homepage(props) {
@@ -17,8 +17,12 @@ function Homepage(props) {
     const [ device, setDevice ] = useState('desktop')
     const dispatch = useDispatch()
     const { roomId } = useParams()
-    const [ room, setRoom ] = useState(null)
-
+    const room = useSelector((state) => {
+        return state.room
+    })
+    const showAlert = useSelector((state) => {
+        return state.alertOptions.visible
+    })
     // Add resize listener
     useEffect(() => {
         const handleResize = () => {
@@ -91,15 +95,10 @@ function Homepage(props) {
     }
 
     let userInfo = sessionStorage.getItem('userInfo')
-
     useEffect(() => {
-        axios.get(`http://localhost:5000/room/${roomId}`)
-            .then((response) => {
-                return setRoom(response.data)
-            })
-            .catch(() => {
-                return setRoom(null)
-            })
+        if(userInfo) {
+            dispatch(updateRoom(roomId))
+        }
     }, [ userInfo ])
 
     let isInputModalOpen = useSelector((state) => {
@@ -115,9 +114,15 @@ function Homepage(props) {
 
     return (
         <div style={pageStyle}>
-            <ModalWrapper />
+            <ModalWrapper/>
             <div>
-                {isInputModalOpen && <InputModal modalText={'Enter Username:'} handleOverlayClick={handleOverlayClick}/>}
+                {isInputModalOpen &&
+                    <InputModal modalText={'Enter Username:'} handleOverlayClick={handleOverlayClick}/>}
+            </div>
+            <div>
+                {showAlert &&
+                    <Alert />
+                }
             </div>
             <div style={navBarStyle}>
                 <TextComponent value={pageTitle} style={titleStyle}/>
@@ -125,8 +130,8 @@ function Homepage(props) {
             </div>
             <div style={subPageStyle}>
                 <BoardComponent style={subPageElement}/>
-                {userInfo && room ? <RoomDetailsWidget room={room}/> :
-                    <RoomAccessWidget />
+                {userInfo && room ? <RoomDetailsWidget room={room} userInfo={userInfo}/> :
+                    <RoomAccessWidget/>
                 }
             </div>
         </div>

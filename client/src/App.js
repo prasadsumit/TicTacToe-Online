@@ -20,7 +20,6 @@ function Test() {
         async function fetchData() {
             try {
                 let response = await axios.post('http://localhost:5000/message', { text: 'Hello from Axios!' })
-                console.log(response.data)
                 setMessage(response.data.text)
             } catch (error) {
                 setMessage('Error fetching data')
@@ -64,7 +63,6 @@ function App() {
                 <Route path="/tic-tac-toe/" element={<Homepage />} />
                 <Route path="/tic-tac-toe/room/:roomId" element={<RoomValidator />} />
                 <Route path="/test/*" element={<Test />} />
-                <Route path="/abcd/*" element={<Socket/>} />
                 <Route path="*" element={<h2 style={{ fontFamily: 'TimesNewRoman' }}>404: Page Not Found</h2>} />
             </Routes>
         </Router>

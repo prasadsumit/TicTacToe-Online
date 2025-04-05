@@ -9,5 +9,8 @@ const ActionTypes = {
     UPDATE_USERINFO: 'UPDATE_USERINFO',
     RESET_GAME: 'RESET_GAME',
     UPDATE_ROOM_ID: 'UPDATE_ROOM_ID',
+    UPDATE_ROOM: 'UPDATE_ROOM',
+    SHOW_ALERT: 'SHOW_ALERT',
+    CLOSE_ALERT: 'CLOSE_ALERT',
 }
 export default ActionTypes

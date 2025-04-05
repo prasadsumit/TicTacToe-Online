@@ -59,6 +59,11 @@ io.on('connection', (socket) => {
         console.log('Join Room request received with room ID: ', roomId)
         await socketService.joinRoom( socket, roomId, userName, uuid)
     })
+
+    socket.on(constants.UPDATE_SOCKET_ID, async (roomId, userName, uuid) => {
+        console.log('Update socket request received with room ID: ', roomId)
+        await socketService.updateSocketId( socket, roomId, userName, uuid)
+    })
 })
 
 

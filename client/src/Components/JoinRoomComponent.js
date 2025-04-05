@@ -2,7 +2,7 @@ import ButtonComponent from './ButtonComponent'
 import TextComponent from './TextComponent'
 import '../Css/RoomAccessWidget.css'
 import { useRef, useState } from 'react'
-import { showInputModal } from '../Actions/Actions'
+import { showAlert, showInputModal } from '../Actions/Actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { constants as C } from '../constants'
 
@@ -44,7 +44,7 @@ function JoinRoomComponent(props) {
         if (inputRef.current) {
             navigator.clipboard.writeText(inputRef.current.value)
                 .then(() => {
-                    return alert('Copied to clipboard!')
+                    return console.log('Copied to clipboard!')
                 })
                 .catch((err) => {
                     return console.error('Failed to copy: ', err)
@@ -56,7 +56,14 @@ function JoinRoomComponent(props) {
         if(config.buttonText === 'Join') {
             joinRoom()
         }else if(config.buttonText === 'Copy') {
+            const alertOptions = {
+                message: 'Copied to clipboard!',
+                dismissAfter: 1000,
+                interactive: false,
+                action:null,
+            }
             copyToClipBoard()
+            dispatch(showAlert(alertOptions))
         }
     }
 
@@ -77,6 +84,11 @@ function JoinRoomComponent(props) {
                     style={inputStyle}
                     value={config.roomId}
                     readOnly={config.buttonText === 'Copy'}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            btnAction()
+                        }
+                    }}
                 />
                 <ButtonComponent buttonText={config.buttonText} onClick={btnAction}/>
             </div>

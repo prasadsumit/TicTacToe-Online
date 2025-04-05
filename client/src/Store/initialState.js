@@ -17,5 +17,13 @@ const initialState = {
         id: '',
     },
     roomId: null,
+    room: null,
+    alertOptions: {
+        visible: false,
+        interactive: null,
+        message: '',
+        action: null,
+        dismissAfter: null
+    }
 }
 export default initialState

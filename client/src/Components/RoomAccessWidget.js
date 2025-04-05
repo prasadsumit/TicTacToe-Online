@@ -3,7 +3,7 @@ import JoinRoomComponent from './JoinRoomComponent'
 import ButtonComponent from './ButtonComponent'
 import TextComponent from './TextComponent'
 import { useDispatch, useSelector } from 'react-redux'
-import { showInputModal, updateRoomId } from '../Actions/Actions'
+import { showAlert, showInputModal, updateRoomId } from '../Actions/Actions'
 import { constants, constants as C } from '../constants'
 import { useEffect, useContext } from 'react'
 import { SocketContext } from '../context/SocketContext'
@@ -17,26 +17,40 @@ export default function RoomAccessWidget(props) {
     const roomId = useSelector((state) => {
         return state.roomId
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    useEffect(() => {
+        // Set up event listener for ROOM_CREATED
+        socket.on(constants.ROOM_CREATED, (receivedData) => {
+            const alertOptions = {
+                message: `Room created with ID: ${receivedData.roomId}`,
+                dismissAfter: 2000,
+                interactive: false,
+                action: null,
+            }
+            console.log(`Room created with ID: ${receivedData.roomId}`)
+            dispatch(updateRoomId(receivedData.roomId))
+            dispatch(showAlert(alertOptions))
+        })
+
+        // Set up event listener for ROOM_JOINED
+        socket.on(constants.ROOM_JOINED, (receivedData) => {
+            console.log(`Room joined with ID: ${receivedData.roomId}`)
+            dispatch(updateRoomId(receivedData.roomId))
+        })
+
+        // Clean up event listener when component unmounts
+        return () => {
+            socket.off(constants.ROOM_CREATED)
+            socket.off(constants.ROOM_JOINED)
+        }
+    }, [ socket ])
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if(roomId) {
             navigate(`/tic-tac-toe/room/${roomId}`)
         }
     }, [ roomId ])
-
-    socket.on('connect', () => {
-        document.title = `Player: ${socket.id}`
-    })
-
-    socket.on(constants.ROOM_CREATED, (receivedData) => {
-        console.log(`Room created with ID: ${receivedData.roomId}`)
-        dispatch(updateRoomId(receivedData.roomId))
-    })
-
-    socket.on(constants.ROOM_JOINED, (receivedData) => {
-        console.log(`Room joined with ID: ${receivedData.roomId}`)
-        dispatch(updateRoomId(receivedData.roomId))
-    })
-
 
     const style = {
         width: '300px',
@@ -59,14 +73,9 @@ export default function RoomAccessWidget(props) {
         fontSize: '16px',
     }
 
-    const userInfo = useSelector((state) => {
-        return state.userInfo
-    })
-
     const createRoom = () => {
         dispatch(showInputModal(true, C.CREATE_ROOM))
     }
-
 
     return (
         <div>

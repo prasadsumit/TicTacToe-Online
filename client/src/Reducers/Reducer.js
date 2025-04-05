@@ -1,6 +1,5 @@
 import ActionTypes from '../Actions/ActionTypes'
 import initialState from '../Store/initialState'
-import { v4 as uuidv4 } from 'uuid'
 
 const resetState = [
     [ 0, 0, 0 ],
@@ -156,6 +155,35 @@ const Reducer = (state = initialState, action) => {
             isGameFinished: false
         }
 
+    case ActionTypes.UPDATE_ROOM:
+        return {
+            ...state,
+            room: action.payload.room
+        }
+
+    case ActionTypes.SHOW_ALERT:
+        return {
+            ...state,
+            alertOptions: {
+                visible: true,
+                interactive: action.payload.interactive,
+                message: action.payload.message,
+                action: action.payload.action,
+                dismissAfter: action.payload.dismissAfter
+            }
+        }
+
+    case ActionTypes.CLOSE_ALERT:
+        return {
+            ...state,
+            alertOptions: {
+                visible: false,
+                interactive: null,
+                message: '',
+                action: null,
+                dismissAfter: null
+            }
+        }
 
     default:
         return state
