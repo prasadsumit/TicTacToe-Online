@@ -99,7 +99,7 @@ function Homepage(props) {
         if(userInfo) {
             dispatch(updateRoom(roomId))
         }
-    }, [ userInfo ])
+    }, [])
 
     let isInputModalOpen = useSelector((state) => {
         return state.inputModal.showInputModal
