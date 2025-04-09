@@ -67,11 +67,11 @@ class SocketService {
 		//fetch current room data
 		const currentRoom = await dbService.getRoomByRoomId(roomId)
 		if(!currentRoom){
-			this.emitToRoom(roomId, constants.ROOM_NOT_FOUND, {message: 'Room not found'})
+			socket.emit(constants.ROOM_NOT_FOUND, {roomId:roomId, message: 'Room not found'}) //only to sender
 			return
 		}
-		if(currentRoom.players.length >= 2){
-			this.emitToRoom(roomId, constants.ROOM_FULL, {message: 'Room is full'})
+		if(Object.keys(currentRoom.players).length >= 2){
+			socket.emit(constants.ROOM_FULL, {message: 'Room is full'}) //only to sender
 			return
 		}
 
@@ -123,13 +123,25 @@ class SocketService {
 		this.emitToRoom(roomId,constants.SOCKET_ID_UPDATED, {roomId: roomId, message: 'Socket Id updated'})
 	}
 
+	async updateRoom(socket, room) {
+		//update in db
+		// console.log('room room: ', room)
+		await dbService.updateRoomByRoomId(room.roomId, room)
+		this.emitToRoom(room.roomId,constants.DB_UPDATED, {roomId: room.roomId, message: 'DB updated'},socket)
+	}
 
-	emitToRoom(roomId, event, data) {
-        if (!this.io) {
-            throw new Error('Socket service not initialized')
-        }
-        this.io.to(roomId).emit(event, data)
-    }
+	emitToRoom(roomId, event, data, socket = null) {
+		if (!this.io) {
+			throw new Error('Socket service not initialized');
+		}
+		if (socket) {
+			// Exclude the sender
+			socket.to(roomId).emit(event, data);
+		} else {
+			// Include everyone in the room
+			this.io.to(roomId).emit(event, data);
+		}
+	}
 }
 
 module.exports = new SocketService()

@@ -7,6 +7,7 @@ const initialState = {
     player: 1,
     isGameFinished: false,
     showWinnerModal: false,
+    isGameEvent: false,
     inputModal: {
         showInputModal: false,
         submitAction: null,

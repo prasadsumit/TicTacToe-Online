@@ -2,9 +2,9 @@ import Lobby from './Lobby'
 import JoinRoomComponent from './JoinRoomComponent'
 import { useContext, useEffect, useState } from 'react'
 import { SocketContext } from '../context/SocketContext'
-import { constants, constants as C } from '../constants'
+import { constants } from '../constants'
 import { useDispatch } from 'react-redux'
-import { showAlert, updateRoom } from '../Actions/Actions'
+import { showAlert, showWinnerModal, updateRoom } from '../Actions/Actions'
 import TextComponent from './TextComponent'
 
 function RoomDetailsWidget(props) {
@@ -17,8 +17,7 @@ function RoomDetailsWidget(props) {
     const socket = useContext(SocketContext)
     userInfo = JSON.parse(userInfo)
     const oldSocketId = room.players[userInfo.id].player.socketId
-    const [ playerTurnMessage, setPlayerTurnMessage ] = useState(null)
-    // Handle socket reconnection on component mount or socket change
+    const [ playerTurnMessage, setPlayerTurnMessage ] = useState('It\'s your turn. Make a move.')
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (socket) {
@@ -28,13 +27,13 @@ function RoomDetailsWidget(props) {
                 socket.emit(constants.UPDATE_SOCKET_ID, roomId, userInfo.name, userInfo.id)
 
                 // Listen for confirmation that the socket ID was updated
-                socket.on(C.SOCKET_ID_UPDATED, (data) => {
+                socket.on(constants.SOCKET_ID_UPDATED, (data) => {
                     console.log('Socket ID updated successfully', data)
                 })
 
                 // Clean up listeners when component unmounts
                 return () => {
-                    socket.off(C.SOCKET_ID_UPDATED)
+                    socket.off(constants.SOCKET_ID_UPDATED)
                 }
             }
             // Set up event listener for ROOM_JOINED
@@ -50,20 +49,48 @@ function RoomDetailsWidget(props) {
                 dispatch(showAlert(alertOptions))
             })
 
+            socket.on(constants.DB_UPDATED, (receivedData) => {
+                const alertOptions = {
+                    message: 'Your Turn!',
+                    dismissAfter: 2000,
+                    interactive: false,
+                    action: null,
+                }
+                console.log('DB was updated!')
+                dispatch(updateRoom(receivedData.roomId))
+            })
+
             return () => {
                 socket.off(constants.ROOM_JOINED)
+                socket.off(constants.DB_UPDATED)
             }
         }
         return () => {}
     }, [ socket ])
 
     useEffect(() => {
-        if(room.playerTurn !== userInfo.id) {
-            setPlayerTurnMessage('Wait for your turn.')
-        } else {
-            setPlayerTurnMessage('It\'s your turn. Make a move.')
+        if(Object.keys(room.players).length === 2) {
+            const alertOptions = {
+                message: 'Your turn!',
+                dismissAfter: 2000,
+                interactive: false,
+                action: null,
+            }
+            if (room.playerTurn !== userInfo.id) {
+                setPlayerTurnMessage('Wait for your turn.')
+            } else {
+                dispatch(showAlert(alertOptions))
+                setPlayerTurnMessage('It\'s your turn. Make a move.')
+            }
         }
-    }, [ room ])
+    }, [ room.playerTurn ])
+
+    useEffect(() => {
+        if(room.isGameFinished) {
+            dispatch(showWinnerModal(true))
+        }
+    }, [ room.isGameFinished ])
+
 
     const invitePlayersConfig = {
         info: 'Invite a friend to this room: ',

@@ -36,7 +36,6 @@ class DatabaseService {
 
 	async updateRoomByRoomId(id, updateData) {
 		try {
-
 			const room = await this.getRoomByRoomId(id)
 			return await Room.findByIdAndUpdate(
 				room._id,

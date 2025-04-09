@@ -3,16 +3,35 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useRunGame } from '../Middleware/RunGame'
 import TileComponent from './TileComponent'
 import store from '../Store/store'
-import { showAlert, updateRoom } from '../Actions/Actions'
+import { executeGame, showAlert, updateGameEvent } from '../Actions/Actions'
+import { SocketContext } from '../context/SocketContext'
+import { useContext, useEffect } from 'react'
+import { constants as C } from '../constants'
 
 export default function BoardComponent(props) {
-    const gameState = useSelector((state) => {
-        return state.gameState
-    })
     const runGame = useRunGame()
     const room = useSelector((state) => state.room)
     const userInfo = useSelector((state) => state.userInfo)
     const dispatch = useDispatch()
+    const socket = useContext(SocketContext)
+    const isGameEvent = useSelector((state) => state.isGameEvent)
+    let dummyGameState = [
+        [ 0, 0, 0 ],
+        [ 0, 0, 0 ],
+        [ 0, 0, 0 ],
+    ]
+    let gameState = dummyGameState
+    if(room && room.gameState) {
+        gameState = room.gameState
+    }
+
+    useEffect(() => {
+        if(room && isGameEvent) {
+            console.log('hello')
+            socket.emit(C.UPDATE_DB, room)
+            dispatch(updateGameEvent(false))
+        }
+    }, [ isGameEvent ])
 
     // Utility function to apply CSS classes based on square position
     function getSquareClasses(rowIndex, colIndex) {
@@ -36,7 +55,7 @@ export default function BoardComponent(props) {
         console.log('inside handleClick')
         if(!userInfo || !room) {
             dispatch(showAlert({
-                message: 'Please create a room to start playing',
+                message: 'Please create a room to start playing!',
                 dismissAfter: 2000,
                 interactive: false,
                 action: null,
@@ -45,7 +64,7 @@ export default function BoardComponent(props) {
         }
         if(userInfo.id !== room.playerTurn) {
             dispatch(showAlert({
-                message: 'Please wait for your turn',
+                message: 'Please wait for your turn!',
                 dismissAfter: 2000,
                 interactive: false,
                 action: null,
@@ -54,11 +73,10 @@ export default function BoardComponent(props) {
         }
 
         const isTileEmpty = gameState[rowIndex][colIndex] === 0
-        const isGameFinished = store.getState().isGameFinished
+        const isGameFinished = room.isGameFinished
         if(isTileEmpty && !isGameFinished) {
-            runGame(rowIndex, colIndex)
+            dispatch(executeGame(rowIndex, colIndex))
         }
-        console.log('currentState', store.getState())
     }
 
     const symbolMap = {

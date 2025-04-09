@@ -12,5 +12,6 @@ const ActionTypes = {
     UPDATE_ROOM: 'UPDATE_ROOM',
     SHOW_ALERT: 'SHOW_ALERT',
     CLOSE_ALERT: 'CLOSE_ALERT',
+    UPDATE_GAME_EVENT: 'UPDATE_GAME_EVENT',
 }
 export default ActionTypes

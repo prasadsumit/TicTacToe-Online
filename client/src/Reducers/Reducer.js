@@ -86,18 +86,23 @@ const evaluateIndex = (row, col, gameState) => {
 
 const Reducer = (state = initialState, action) => {
     switch (action.type) {
-    case ActionTypes.UPDATE_TILE:
-        return {
-            ...state,
-            gameState: ((currState = state.gameState) => {
-                let newGameState = currState.map((row) => {
-                    return [ ...row ]
-                }) // Deep copy of state
-                const { row, col, player } = action.payload
-                newGameState[row][col] = player
-                return newGameState
-            })()
-        }
+    // case ActionTypes.UPDATE_TILE: {
+    //     let updatedRoom = {
+    //         ...state.room,
+    //         gameState: ((currState = state.gameState) => {
+    //             let newGameState = currState.map((row) => {
+    //                 return [ ...row ]
+    //             }) // Deep copy of state
+    //             const { row, col, tileValue } = action.payload
+    //             newGameState[row][col] = tileValue
+    //             return newGameState
+    //         })()
+    //     }
+    //     return {
+    //         ...state,
+    //         room: updatedRoom
+    //     }
+    // }
 
     case ActionTypes.RESET_TILE:
         return {
@@ -105,21 +110,37 @@ const Reducer = (state = initialState, action) => {
             gameState: resetState
         }
 
-    case ActionTypes.CHANGE_PLAYER:
+        // case ActionTypes.CHANGE_PLAYER:{
+        //     let updatedRoom = {
+        //         ...state.room,
+        //         playerTurn: action.payload.playerTurn
+        //     }
+        //     return {
+        //         ...state,
+        //         room: updatedRoom
+        //     }
+        // }
+
+        // case ActionTypes.RUN_GAME_LOGIC: {
+        //     const { row, col, gameState } = action.payload
+        //     let updatedRoom = {
+        //         ...state.room,
+        //         isGameFinished: evaluateIndex(row, col, gameState)
+        //     }
+        //     return {
+        //         ...state,
+        //         room: updatedRoom
+        //     }
+        // }
+
+    case ActionTypes.EXECUTE_GAME:
         return {
             ...state,
-            player: action.payload.player !== -1 ?
-                action.payload.player :
-                state.player === 1 ? 2 : 1
+            showWinnerModal: action.payload.isGameFinished,
+            room: action.payload.room,
+            isGameEvent: action.payload.isGameEvent
         }
 
-    case ActionTypes.RUN_GAME_LOGIC: {
-        const { row, col, gameState } = action.payload
-        return {
-            ...state,
-            isGameFinished: evaluateIndex(row, col, gameState)
-        }
-    }
 
     case ActionTypes.SHOW_WINNER_MODAL:
         return {
@@ -147,6 +168,12 @@ const Reducer = (state = initialState, action) => {
         return {
             ...state,
             roomId: action.payload.roomId
+        }
+
+    case ActionTypes.UPDATE_GAME_EVENT:
+        return {
+            ...state,
+            isGameEvent: action.payload.value
         }
 
     case ActionTypes.RESET_GAME:

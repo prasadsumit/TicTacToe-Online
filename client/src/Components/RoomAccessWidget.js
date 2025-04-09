@@ -38,6 +38,28 @@ export default function RoomAccessWidget(props) {
             dispatch(updateRoomId(receivedData.roomId))
         })
 
+        socket.on(constants.ROOM_FULL, (receivedData) => {
+            const alertOptions = {
+                message: 'Couldn\'t join, Room is full!',
+                dismissAfter: 2000,
+                interactive: false,
+                action: null,
+            }
+            console.log('Couldn\'t join, Room is full!')
+            dispatch(showAlert(alertOptions))
+        })
+
+        socket.on(constants.ROOM_NOT_FOUND, (receivedData) => {
+            const alertOptions = {
+                message: `Room ${receivedData.roomId} not found!`,
+                dismissAfter: 2000,
+                interactive: false,
+                action: null,
+            }
+            console.log(`Room ${receivedData.roomId} not found!`)
+            dispatch(showAlert(alertOptions))
+        })
+
         // Clean up event listener when component unmounts
         return () => {
             socket.off(constants.ROOM_CREATED)

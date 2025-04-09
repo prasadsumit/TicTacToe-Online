@@ -7,8 +7,7 @@ export const useRunGame = () => {
     const runGame = (row, col) => {
         dispatch(updateTile(row, col))
         dispatch(runGameLogic(row, col))
-        dispatch(changePlayer(-1))
-    // dispatch(executeGame(row,col,player))
+        dispatch(changePlayer())
     }
 
     return runGame

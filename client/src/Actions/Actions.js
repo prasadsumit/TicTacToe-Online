@@ -2,16 +2,19 @@ import ActionTypes from './ActionTypes'
 import { constants, constants as C } from '../constants'
 import { v4 as uuidv4 } from 'uuid'
 import { fetchRoomData } from '../utils/requests'
+import { getOpponentId, evaluateIndex } from '../utils/helpers'
 
 export const updateTile = (row, col) => {
     return (dispatch, getState) => {
-        const player = getState().player
+        const playerId = getState().room.playerTurn
+        const opponentId = getOpponentId(playerId, getState)
+        const tileValue = playerId > opponentId ? 1 : 2
         dispatch({
             type: ActionTypes.UPDATE_TILE,
             payload: {
                 row:row,
                 col:col,
-                player:player
+                tileValue:tileValue
             },
         })
     }
@@ -25,14 +28,16 @@ export const resetTile = () => {
     }
 }
 
-export const changePlayer = (player) => {
+export const changePlayer = () => {
     return (dispatch, getState) => {
-        const isGameFinished = getState().isGameFinished
+        const isGameFinished = getState().room.isGameFinished
+        const currentPlayerTurn = getState().room.playerTurn
+        const nextPlayerTurn = Object.keys(getState().room.players).filter((key) => key !== currentPlayerTurn)[0]
         if(!isGameFinished) {
             dispatch({
                 type: ActionTypes.CHANGE_PLAYER,
                 payload: {
-                    player: player
+                    playerTurn: nextPlayerTurn
                 }
             })
         } else {
@@ -44,7 +49,7 @@ export const changePlayer = (player) => {
 
 export const runGameLogic = (row, col) => {
     return (dispatch, getState) => {
-        const gameState = getState().gameState
+        const gameState = getState().room.gameState
         dispatch({
             type: ActionTypes.RUN_GAME_LOGIC,
             payload: {
@@ -56,10 +61,51 @@ export const runGameLogic = (row, col) => {
     }
 }
 
+export const executeGame = (row, col) => {
+    return (dispatch, getState) => {
+        const playerId = getState().room.playerTurn
+        const opponentId = getOpponentId(playerId, getState)
+        const tileValue = playerId > opponentId ? 1 : 2
+        let gameState = ((currState = getState().room.gameState) => {
+            let newGameState = currState.map((row) => {
+                return [ ...row ]
+            }) // Deep copy of state
+            newGameState[row][col] = tileValue
+            return newGameState
+        })()
+        let isGameFinished = evaluateIndex(row, col, gameState)
+        let updatedRoom = {
+            ...getState().room,
+            gameState: gameState,
+            isGameFinished: isGameFinished,
+            playerTurn: !isGameFinished ? opponentId : playerId
+        }
+        dispatch({
+            type: ActionTypes.EXECUTE_GAME,
+            payload: {
+                room: updatedRoom,
+                isGameEvent: true,
+                isGameFinished: isGameFinished
+            }
+        })
+    }
+}
+
 export const showWinnerModal = (value) => {
     return (dispatch) => {
         dispatch({
             type: ActionTypes.SHOW_WINNER_MODAL,
+            payload: {
+                value: value
+            }
+        })
+    }
+}
+
+export const updateGameEvent = (value) => {
+    return (dispatch) => {
+        dispatch({
+            type: ActionTypes.UPDATE_GAME_EVENT,
             payload: {
                 value: value
             }

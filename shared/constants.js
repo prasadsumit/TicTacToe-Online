@@ -8,8 +8,10 @@ const constants = {
     ROOM_FULL : 'ROOM_FULL',
     ROOM_NOT_FOUND: 'ROOM_NOT_FOUND',
     UPDATE_SOCKET_ID: 'UPDATE_SOCKET_ID',
+    UPDATE_DB: 'UPDATE_DB',
     PLAYER_NOT_FOUND: 'PLAYER_NOT_FOUND',
     SOCKET_ID_UPDATED: 'SOCKET_ID_UPDATED',
+    DB_UPDATED: 'DB_UPDATED',
 
     roomTemplate : {
         players: {},

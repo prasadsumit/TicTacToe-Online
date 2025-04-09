@@ -7,7 +7,7 @@ const { socketJoinRoom } = require('./middleware/socket-functions/join-room')
 const cors = require('cors')
 const router = require('./routes/routes')
 const socketService = require('./services/socketService')
-const {constants} = require("../shared/constants");
+const {constants} = require("../shared/constants")
 require('dotenv').config({ path: '.env.local' })
 
 // Create server and Socket.IO instance
@@ -64,6 +64,12 @@ io.on('connection', (socket) => {
         console.log('Update socket request received with room ID: ', roomId)
         await socketService.updateSocketId( socket, roomId, userName, uuid)
     })
+
+    socket.on(constants.UPDATE_DB, async (room) => {
+        console.log('Update DB request received with roomId: ', room.roomId)
+        await socketService.updateRoom( socket, room)
+    })
+
 })
 
 
