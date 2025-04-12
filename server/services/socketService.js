@@ -130,6 +130,14 @@ class SocketService {
 		this.emitToRoom(room.roomId,constants.DB_UPDATED, {roomId: room.roomId, message: 'DB updated'},socket)
 	}
 
+	async startNewGame(socket, roomId, userName) {
+		//update in db
+		let currentRoom = await dbService.getRoomByRoomId(roomId)
+		currentRoom.isGameFinished = false
+		await dbService.updateRoomByRoomId(roomId, currentRoom)
+		this.emitToRoom(roomId,constants.START_NEW_GAME, {roomId: roomId, message: 'New game started!', userName:userName},socket)
+	}
+
 	emitToRoom(roomId, event, data, socket = null) {
 		if (!this.io) {
 			throw new Error('Socket service not initialized');

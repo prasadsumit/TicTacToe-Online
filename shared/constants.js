@@ -12,6 +12,7 @@ const constants = {
     PLAYER_NOT_FOUND: 'PLAYER_NOT_FOUND',
     SOCKET_ID_UPDATED: 'SOCKET_ID_UPDATED',
     DB_UPDATED: 'DB_UPDATED',
+    START_NEW_GAME: 'START_NEW_GAME',
 
     roomTemplate : {
         players: {},

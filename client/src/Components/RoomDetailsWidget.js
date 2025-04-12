@@ -59,6 +59,18 @@ function RoomDetailsWidget(props) {
                 console.log('DB was updated!')
                 dispatch(updateRoom(receivedData.roomId))
             })
+            socket.on(constants.START_NEW_GAME, (receivedData) => {
+                const alertOptions = {
+                    message: `New game started by ${ receivedData.userName}`,
+                    dismissAfter: 2000,
+                    interactive: false,
+                    action: null,
+                }
+                console.log('New game started!')
+                dispatch(updateRoom(receivedData.roomId))
+                dispatch(showAlert(alertOptions))
+                dispatch(showWinnerModal(false))
+            })
 
             return () => {
                 socket.off(constants.ROOM_JOINED)
@@ -69,7 +81,7 @@ function RoomDetailsWidget(props) {
     }, [ socket ])
 
     useEffect(() => {
-        if(Object.keys(room.players).length === 2) {
+        if(Object.keys(room.players).length === 2 && !room.isGameFinished) {
             const alertOptions = {
                 message: 'Your turn!',
                 dismissAfter: 2000,

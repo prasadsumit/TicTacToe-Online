@@ -10,4 +10,5 @@ export const constants = {
     SOCKET_ID_UPDATED: 'SOCKET_ID_UPDATED',
     UPDATE_DB: 'UPDATE_DB',
     DB_UPDATED: 'DB_UPDATED',
+    START_NEW_GAME: 'START_NEW_GAME',
 }

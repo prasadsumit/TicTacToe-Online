@@ -176,11 +176,17 @@ const Reducer = (state = initialState, action) => {
             isGameEvent: action.payload.value
         }
 
-    case ActionTypes.RESET_GAME:
-        return {
-            ...state,
+    case ActionTypes.RESET_GAME: {
+        let room = action.payload.room
+        let updatedRoom = {
+            ...state.room,
             isGameFinished: false
         }
+        return {
+            ...state,
+            room: updatedRoom
+        }
+    }
 
     case ActionTypes.UPDATE_ROOM:
         return {

@@ -70,6 +70,11 @@ io.on('connection', (socket) => {
         await socketService.updateRoom( socket, room)
     })
 
+    socket.on(constants.START_NEW_GAME, async (roomId, userName) => {
+        console.log('New Game request received with roomId: ', roomId)
+        await socketService.startNewGame( socket, roomId, userName)
+    })
+
 })
 
 

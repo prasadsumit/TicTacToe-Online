@@ -2,7 +2,14 @@ import ActionTypes from './ActionTypes'
 import { constants, constants as C } from '../constants'
 import { v4 as uuidv4 } from 'uuid'
 import { fetchRoomData } from '../utils/requests'
-import { getOpponentId, evaluateIndex } from '../utils/helpers'
+import { getOpponentId, evaluateIndex, isAllNonZeros } from '../utils/helpers'
+
+const resetState = [
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ]
+]
+
 
 export const updateTile = (row, col) => {
     return (dispatch, getState) => {
@@ -74,18 +81,34 @@ export const executeGame = (row, col) => {
             return newGameState
         })()
         let isGameFinished = evaluateIndex(row, col, gameState)
-        let updatedRoom = {
-            ...getState().room,
+        let isDraw = !isGameFinished && isAllNonZeros(gameState)
+        console.log('isDraw', isDraw)
+        let updatedRoom = structuredClone(getState().room)
+        updatedRoom = {
+            ...updatedRoom,
             gameState: gameState,
             isGameFinished: isGameFinished,
             playerTurn: !isGameFinished ? opponentId : playerId
+        }
+        if(isGameFinished) {
+            updatedRoom.players[playerId].player.wins += 1
+            updatedRoom.players[opponentId].player.losses += 1
+            updatedRoom.gameState = resetState
+        }
+        if(isDraw) {
+            updatedRoom.isGameFinished = true
+            let players = Object.keys(updatedRoom.players)
+            players.forEach((playerId) => {
+                updatedRoom.players[playerId].player.draws += 1
+                updatedRoom.gameState = resetState
+            })
         }
         dispatch({
             type: ActionTypes.EXECUTE_GAME,
             payload: {
                 room: updatedRoom,
                 isGameEvent: true,
-                isGameFinished: isGameFinished
+                isGameFinished: updatedRoom.isGameFinished
             }
         })
     }
@@ -153,12 +176,13 @@ export const initUserInfo = () => {
     }
 }
 
-export const resetGame = () => {
+export const resetGame = (roomId, userInfo, socket) => {
     return (dispatch) => {
         dispatch({
             type: ActionTypes.RESET_GAME,
             payload: {}
         })
+        socket.emit(constants.START_NEW_GAME, roomId, userInfo.name)
     }
 }
 

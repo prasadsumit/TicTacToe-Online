@@ -78,5 +78,8 @@ const evaluateIndex = (row, col, gameState) => {
     return false
 }
 
+const isAllNonZeros = (matrix) => {
+    return matrix.every(row => row.every(cell => cell !== 0))
+}
 
-export { getOpponentId, evaluateIndex }
+export { getOpponentId, evaluateIndex, isAllNonZeros }
