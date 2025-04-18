@@ -1,39 +1,9 @@
 import Homepage from './Pages/Homepage'
 import './index.css'
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
-import RoomPage from './Pages/RoomPage'
 import axios from 'axios'
-import { useEffect, useRef, useState } from 'react'
-import Socket from './socket'
+import { useEffect, useState } from 'react'
 
-
-function Test() {
-    const [ message, setMessage ] = useState('Loading...')
-    const hasFetched = useRef(false)
-
-    useEffect(() => {
-        if (hasFetched.current) {
-            return
-        }
-        hasFetched.current = true
-
-        async function fetchData() {
-            try {
-                let response = await axios.post('http://localhost:5000/message', { text: 'Hello from Axios!' })
-                setMessage(response.data.text)
-            } catch (error) {
-                setMessage('Error fetching data')
-                console.error('API Error:', error)
-            }
-        }
-
-        fetchData()
-    }, []) // Runs once when component mounts
-
-    return (
-        <h2 style={{ fontFamily: 'TimesNewRoman' }}>{message}</h2>
-    )
-}
 
 function RoomValidator() {
     const { roomId } = useParams()
@@ -64,7 +34,6 @@ function App() {
                 <Route path="/" element={<Navigate to="/tic-tac-toe/" />} />
                 <Route path="/tic-tac-toe/" element={<Homepage />} />
                 <Route path="/tic-tac-toe/room/:roomId" element={<RoomValidator />} />
-                <Route path="/test/*" element={<Test />} />
                 <Route path="*" element={<h2 style={{ fontFamily: 'TimesNewRoman' }}>404: Page Not Found</h2>} />
             </Routes>
         </Router>

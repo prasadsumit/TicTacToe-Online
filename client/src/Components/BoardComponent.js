@@ -1,15 +1,12 @@
 import '../Css/Board.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { useRunGame } from '../Middleware/RunGame'
 import TileComponent from './TileComponent'
-import store from '../Store/store'
 import { executeGame, showAlert, updateGameEvent } from '../Actions/Actions'
 import { SocketContext } from '../context/SocketContext'
 import { useContext, useEffect } from 'react'
 import { constants as C } from '../constants'
 
 export default function BoardComponent(props) {
-    const runGame = useRunGame()
     const room = useSelector((state) => state.room)
     const userInfo = useSelector((state) => state.userInfo)
     const dispatch = useDispatch()
