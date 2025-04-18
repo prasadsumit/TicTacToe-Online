@@ -1,0 +1,53 @@
+:root {
+    --border-radius: 8px;
+    --border-width: 4px;
+    --tile-height: 150px;
+    --tile-width: 200px;
+}
+
+.no-select {
+    user-select: none; /* For modern browsers */
+    -webkit-user-select: none; /* For Safari */
+    -moz-user-select: none; /* For Firefox */
+}
+
+.square {
+    width: var(--tile-width);
+    height: var(--tile-height);
+    border: var(--border-width) solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.left {
+    border-left: none;
+}
+.right {
+    border-right: none;
+}
+.top {
+    border-top: none;
+}
+.bottom {
+    border-bottom: none;
+}
+
+
+.material-symbols-outlined {
+    font-size: 110px;
+    font-weight: 300;
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fade-in 0.5s ease-in-out;
+}

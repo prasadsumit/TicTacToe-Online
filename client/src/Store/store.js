@@ -1,24 +1,11 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
-import gameStateReducer from '../Reducers/gameStateReducer';
-import playerReducer from '../Reducers/playerReducer';
-import gameStatusReducer from '../Reducers/gameStatusReducer';
-import initialState from './initialState';
-import { thunk } from 'redux-thunk';
-import winnerModalReducer from '../Reducers/winnerModalReducer';
-
-// Combining multiple reducers
-const rootReducer = combineReducers({
-  gameState: gameStateReducer,
-  player: playerReducer,
-  isGameFinished: gameStatusReducer,
-  showWinnerModal: winnerModalReducer
-});
-
+import { configureStore } from '@reduxjs/toolkit'
+import initialState from './initialState'
+import Reducer from '../Reducers/Reducer'
 const store = configureStore({
-  reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk),  // Add thunk as middleware
-  preloadedState: initialState,  // Correctly set initial state
-});
-
-export default store;
+    reducer: Reducer,
+    preloadedState: initialState, // Correctly set initial state
+})
+if (process.env.NODE_ENV === 'development') {
+    window.store = store
+}
+export default store

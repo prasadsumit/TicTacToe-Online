@@ -32,4 +32,8 @@
   .modal-button:hover {
     background: #0056b3;
   }
-  
+
+  .input-fields{
+      display: flex;
+      gap: 10px;
+  }

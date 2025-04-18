@@ -1,114 +1,227 @@
-import ActionTypes from "../Actions/ActionTypes";
+import ActionTypes from '../Actions/ActionTypes'
+import initialState from '../Store/initialState'
 
-const evaluateIndex = (row,col,gameState) => {
-	let value = gameState[row][col]
-	
-	//left-diagonal 
-	if (row === col){
-		console.log("left diagonal")
-		let compareArr = [
-			gameState[0][0],
-			gameState[1][1],
-			gameState[2][2],
-		]
-		compareArr = compareArr.map( el => (el === value))
-		if(compareArr.indexOf(false) === -1){
-			return true
-		}
-	}
-	// right-diagonal
-	if(row + col === 2){
-		console.log("right diagonal")
-		let compareArr = [
-			gameState[0][2],
-			gameState[1][1],
-			gameState[2][0],
-		]
-		compareArr = compareArr.map( el => (el === value))
-		if(compareArr.indexOf(false) === -1){
-			return true
-		}
-	}
+const resetState = [
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+    [ 0, 0, 0 ],
+]
 
-	//row-traverse
-	console.log("row traverse") 
-	var isRowMatch = true
-	for(var i=0;i<3;i++){
-		if(gameState[row][i] !== value){
-			isRowMatch = false
-			break
-		}
-	}
+const evaluateIndex = (row, col, gameState) => {
+    if (!gameState || !Array.isArray(gameState) || !Array.isArray(gameState[0])) {
+        throw new Error('Invalid gameState structure')
+    }
 
-	if(isRowMatch){
-		return true
-	}
-	//col-traverse
-	console.log("col traverse")
-	var isColMatch = true
-	for(var j=0;j<3;j++){
-		if(gameState[j][col] !== value){
-			isColMatch = false
-			break
-		}
-	}
+    if (
+        row < 0 ||
+		row >= gameState.length ||
+		col < 0 ||
+		col >= gameState[row].length
+    ) {
+        throw new Error(`Invalid row or col: row=${row}, col=${col}`)
+    }
 
-	if(isColMatch){
-		return true
-	}
+    let value = gameState[row][col]
 
-	return false
+    // left-diagonal
+    if (row === col) {
+        console.log('left diagonal')
+        let compareArr = [
+            gameState[0][0],
+            gameState[1][1],
+            gameState[2][2],
+        ]
+        compareArr = compareArr.map((el) => {
+            return el === value
+        })
+        if(compareArr.indexOf(false) === -1) {
+            return true
+        }
+    }
+    // right-diagonal
+    if(row + col === 2) {
+        console.log('right diagonal')
+        let compareArr = [
+            gameState[0][2],
+            gameState[1][1],
+            gameState[2][0],
+        ]
+        compareArr = compareArr.map((el) => {
+            return el === value
+        })
+        if(compareArr.indexOf(false) === -1) {
+            return true
+        }
+    }
+
+    // row-traverse
+    console.log('row traverse')
+    let isRowMatch = true
+    for(let i = 0; i < 3; i++) {
+        if(gameState[row][i] !== value) {
+            isRowMatch = false
+            break
+        }
+    }
+
+    if(isRowMatch) {
+        return true
+    }
+    // col-traverse
+    console.log('col traverse')
+    let isColMatch = true
+    for(let j = 0; j < 3; j++) {
+        if(gameState[j][col] !== value) {
+            isColMatch = false
+            break
+        }
+    }
+
+    if(isColMatch) {
+        return true
+    }
+
+    return false
 }
 
-const tileReducer = (state, action) => {
-	switch (action.type) {
-		//update tile
-		case ActionTypes.UPDATE_TILE:
-			let newGameState = state.gameState
-			const rowIndex = action.payload.row
-			const colIndex = action.payload.col
-			newGameState[rowIndex][colIndex] = state.player
-			return {
-				...state,
-				gameState: newGameState,
-			}
-		//reset tile
-		case ActionTypes.RESET_TILE:
-			const zeroState = [
-				[0, 0, 0],
-				[0, 0, 0],
-				[0, 0, 0]
-			]
-			return {
-				...state,
-				gameState: zeroState
-			}
-		//change player
-		case ActionTypes.CHANGE_PLAYER:
-			let newPlayer = action.payload.player
-			let player = state.player
-			if (newPlayer === -1) {
-				player = player === 1 ? 2 : 1
-			} else {
-				player = newPlayer
-			}
-			return {
-				...state,
-				player: player
-			}
-		// run game logic
-		case ActionTypes.RUN_GAME_LOGIC:
-			let row = action.payload.row
-			let col = action.payload.col
-			let isGameFinished = evaluateIndex(row,col,state.gameState)
+const Reducer = (state = initialState, action) => {
+    switch (action.type) {
+    // case ActionTypes.UPDATE_TILE: {
+    //     let updatedRoom = {
+    //         ...state.room,
+    //         gameState: ((currState = state.gameState) => {
+    //             let newGameState = currState.map((row) => {
+    //                 return [ ...row ]
+    //             }) // Deep copy of state
+    //             const { row, col, tileValue } = action.payload
+    //             newGameState[row][col] = tileValue
+    //             return newGameState
+    //         })()
+    //     }
+    //     return {
+    //         ...state,
+    //         room: updatedRoom
+    //     }
+    // }
 
-			return  isGameFinished? {...state,isGameFinished: true} : state
-			
+    case ActionTypes.RESET_TILE:
+        return {
+            ...state,
+            gameState: resetState
+        }
 
-		default:
-			return state;
-	}
+        // case ActionTypes.CHANGE_PLAYER:{
+        //     let updatedRoom = {
+        //         ...state.room,
+        //         playerTurn: action.payload.playerTurn
+        //     }
+        //     return {
+        //         ...state,
+        //         room: updatedRoom
+        //     }
+        // }
 
-};
+        // case ActionTypes.RUN_GAME_LOGIC: {
+        //     const { row, col, gameState } = action.payload
+        //     let updatedRoom = {
+        //         ...state.room,
+        //         isGameFinished: evaluateIndex(row, col, gameState)
+        //     }
+        //     return {
+        //         ...state,
+        //         room: updatedRoom
+        //     }
+        // }
 
-export default tileReducer;
+    case ActionTypes.EXECUTE_GAME:
+        return {
+            ...state,
+            showWinnerModal: action.payload.isGameFinished,
+            room: action.payload.room,
+            isGameEvent: action.payload.isGameEvent
+        }
+
+
+    case ActionTypes.SHOW_WINNER_MODAL:
+        return {
+            ...state,
+            showWinnerModal: action.payload.value
+        }
+
+    case ActionTypes.SHOW_INPUT_MODAL:
+        return {
+            ...state,
+            inputModal: {
+                showInputModal: action.payload.value,
+                submitAction: action.payload.submitAction,
+                inputRoomId: action.payload.roomId,
+            }
+        }
+
+    case ActionTypes.UPDATE_USERINFO:
+        return {
+            ...state,
+            userInfo: action.payload.userInfo
+        }
+
+    case ActionTypes.UPDATE_ROOM_ID:
+        return {
+            ...state,
+            roomId: action.payload.roomId
+        }
+
+    case ActionTypes.UPDATE_GAME_EVENT:
+        return {
+            ...state,
+            isGameEvent: action.payload.value
+        }
+
+    case ActionTypes.RESET_GAME: {
+        let room = action.payload.room
+        let updatedRoom = {
+            ...state.room,
+            isGameFinished: false
+        }
+        return {
+            ...state,
+            room: updatedRoom
+        }
+    }
+
+    case ActionTypes.UPDATE_ROOM:
+        return {
+            ...state,
+            room: action.payload.room
+        }
+
+    case ActionTypes.SHOW_ALERT:
+        return {
+            ...state,
+            alertOptions: {
+                visible: true,
+                interactive: action.payload.interactive,
+                message: action.payload.message,
+                action: action.payload.action,
+                dismissAfter: action.payload.dismissAfter
+            }
+        }
+
+    case ActionTypes.CLOSE_ALERT:
+        return {
+            ...state,
+            alertOptions: {
+                visible: false,
+                interactive: null,
+                message: '',
+                action: null,
+                dismissAfter: null
+            }
+        }
+
+    default:
+        return state
+    }
+}
+
+export default Reducer
+

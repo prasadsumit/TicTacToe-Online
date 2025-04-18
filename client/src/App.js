@@ -1,11 +1,43 @@
-import Homepage from "./Pages/Homepage";
+import Homepage from './Pages/Homepage'
+import './index.css'
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
-function App() {
-  return (
-    <div>
-      <Homepage />
-    </div>
-  );
+
+function RoomValidator() {
+    const { roomId } = useParams()
+    const [ isValid, setIsValid ] = useState(null)
+
+    useEffect(() => {
+        if (roomId) {
+            axios.get(`http://localhost:5000/room/${roomId}`)
+                .then((response) => {
+                    return setIsValid(response !== null)
+                })
+                .catch(() => {
+                    return setIsValid(false)
+                })
+        }
+    }, [ roomId ])
+
+    if (isValid === null) {
+        return <h2>Loading...</h2>
+    }
+    return isValid ? <Homepage /> : <h2>404: Room Not Found</h2>
 }
 
-export default App;
+function App() {
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<Navigate to="/tic-tac-toe/" />} />
+                <Route path="/tic-tac-toe/" element={<Homepage />} />
+                <Route path="/tic-tac-toe/room/:roomId" element={<RoomValidator />} />
+                <Route path="*" element={<h2 style={{ fontFamily: 'TimesNewRoman' }}>404: Page Not Found</h2>} />
+            </Routes>
+        </Router>
+    )
+}
+
+export default App
