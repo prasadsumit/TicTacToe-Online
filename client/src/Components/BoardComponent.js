@@ -62,6 +62,15 @@ export default function BoardComponent(props) {
             }))
             return
         }
+        if(Object.keys(room.players).length < 2) {
+            dispatch(showAlert({
+                message: 'You need two players to play. Invite a friend!',
+                dismissAfter: 2000,
+                interactive: false,
+                action: null,
+            }))
+            return
+        }
         if(userInfo.id !== room.playerTurn) {
             dispatch(showAlert({
                 message: 'Please wait for your turn!',

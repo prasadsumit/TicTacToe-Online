@@ -21,8 +21,7 @@ function ModalWrapper() {
     let winner = playerId ? room.players[playerId].player.userName : null
     let modalText = `${winner} wins 🥳`
     if(room) {
-        let isDraw = !room.isGameFinished && isAllNonZeros(room.gameState)
-        if(isDraw) {
+        if(room.isGameDrawn) {
             modalText = 'Draw! 🟡'
         }
     }

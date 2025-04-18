@@ -81,7 +81,7 @@ export const executeGame = (row, col) => {
             return newGameState
         })()
         let isGameFinished = evaluateIndex(row, col, gameState)
-        let isDraw = !isGameFinished && isAllNonZeros(gameState)
+        let isDraw = isAllNonZeros(gameState)
         console.log('isDraw', isDraw)
         let updatedRoom = structuredClone(getState().room)
         updatedRoom = {
@@ -97,6 +97,7 @@ export const executeGame = (row, col) => {
         }
         if(isDraw) {
             updatedRoom.isGameFinished = true
+            updatedRoom.isGameDrawn = true
             let players = Object.keys(updatedRoom.players)
             players.forEach((playerId) => {
                 updatedRoom.players[playerId].player.draws += 1

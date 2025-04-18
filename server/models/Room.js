@@ -18,6 +18,7 @@ const RoomSchema = new mongoose.Schema({
         }),
     },
     isGameFinished: { type: Boolean, default: false },
+    isGameDrawn: { type: Boolean, default: false },
     playerTurn: { type: String, required: true },
     gameState: {
         type: [ [ Number ] ], // 2D array for Tic-Tac-Toe grid

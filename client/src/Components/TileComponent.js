@@ -5,9 +5,9 @@ function TileComponent({ value, onClick, className }) {
     const getIcon = (value) => {
         let icon = null
         if (value === 'x') {
-            icon = <span className="material-symbols-outlined fade-in"> close </span>
+            icon = <img style={{ height:'100px', width:'100px' }} src={require('../utils/close.png')} />
         } else if (value === '0') {
-            icon = <span className="material-symbols-outlined fade-in"> radio_button_unchecked </span>
+            icon = <img style={{ height:'120px', width:'120px' }} src={require('../utils/radio-button.png')}/>
         }
         return icon
     }

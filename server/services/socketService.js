@@ -134,6 +134,7 @@ class SocketService {
 		//update in db
 		let currentRoom = await dbService.getRoomByRoomId(roomId)
 		currentRoom.isGameFinished = false
+		currentRoom.isGameDrawn = false
 		await dbService.updateRoomByRoomId(roomId, currentRoom)
 		this.emitToRoom(roomId,constants.START_NEW_GAME, {roomId: roomId, message: 'New game started!', userName:userName},socket)
 	}
