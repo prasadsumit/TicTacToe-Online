@@ -6,19 +6,24 @@ const cors = require('cors')
 const router = require('./routes/routes')
 const socketService = require('./services/socketService')
 const {constants} = require("../shared/constants")
+const dbService = require("./services/databaseService");
 require('dotenv').config({ path: '.env.local' })
 
 // Create server and Socket.IO instance
 const app = express()
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT
 
 
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: process.env.CLIENT_URL
 }))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use('/room', router)
+
+app.get('/', async (req,res) => {
+    res.send("Backend is running.")
+});
 
 
 const server = http.createServer(app)
@@ -38,7 +43,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 const io = socketService.initialize(server, {
     cors: {
-        origin: process.env.CLIENT_URL || 'http://localhost:3000',
+        origin: process.env.CLIENT_URL,
         methods: [ 'GET', 'POST' ],
         credentials: true
     }

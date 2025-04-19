@@ -1,8 +1,9 @@
 import axios from 'axios'
 
 const fetchRoomData = async(roomId) => {
+    const serverUrl = process.env.REACT_APP_SERVER_URL
     try {
-        let response = await axios.get(`http://localhost:5000/room/${roomId}`)
+        let response = await axios.get(`${serverUrl}/room/${roomId}`)
         return Promise.resolve(response.data)
     } catch (error) {
         // Handle errors
