@@ -8,10 +8,11 @@ import { useEffect, useState } from 'react'
 function RoomValidator() {
     const { roomId } = useParams()
     const [ isValid, setIsValid ] = useState(null)
+    const serverUrl = process.env.REACT_APP_SERVER_URL
 
     useEffect(() => {
         if (roomId) {
-            axios.get(`http://localhost:5000/room/${roomId}`)
+            axios.get(`${serverUrl}/room/${roomId}`)
                 .then((response) => {
                     return setIsValid(response !== null)
                 })
