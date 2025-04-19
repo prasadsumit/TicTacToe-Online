@@ -48,18 +48,18 @@ const Alert = () => {
             <p className="alert-message">{message}</p>
 
             {!dismissAfter &&
-				<div className="alert-buttons">
-				    <button className="alert-button ok" onClick={() => {
-				        return handleClose(okAction)
-				    }}>
-						OK
-				    </button>
-				    <button className="alert-button cancel" onClick={() => {
-				        return handleClose(onCancel)
-				    }}>
-						Cancel
-				    </button>
-				</div>
+                    <div className="alert-buttons">
+                        <button className="alert-button ok" onClick={() => {
+                            return handleClose(okAction)
+                        }}>
+                            OK
+                        </button>
+                        <button className="alert-button cancel" onClick={() => {
+                            return handleClose(onCancel)
+                        }}>
+                            Cancel
+                        </button>
+                    </div>
             }
         </div>
     )
