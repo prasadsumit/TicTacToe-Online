@@ -18,6 +18,7 @@ function RoomDetailsWidget(props) {
     userInfo = JSON.parse(userInfo)
     const oldSocketId = room.players[userInfo.id].player.socketId
     const [ playerTurnMessage, setPlayerTurnMessage ] = useState('It\'s your turn. Make a move.')
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (socket) {
@@ -36,7 +37,6 @@ function RoomDetailsWidget(props) {
                     socket.off(constants.SOCKET_ID_UPDATED)
                 }
             }
-            // Set up event listener for ROOM_JOINED
             socket.on(constants.ROOM_JOINED, (receivedData) => {
                 const alertOptions = {
                     message: `${receivedData.userName} joined the room!`,

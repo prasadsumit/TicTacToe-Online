@@ -86,52 +86,11 @@ const evaluateIndex = (row, col, gameState) => {
 
 const Reducer = (state = initialState, action) => {
     switch (action.type) {
-    // case ActionTypes.UPDATE_TILE: {
-    //     let updatedRoom = {
-    //         ...state.room,
-    //         gameState: ((currState = state.gameState) => {
-    //             let newGameState = currState.map((row) => {
-    //                 return [ ...row ]
-    //             }) // Deep copy of state
-    //             const { row, col, tileValue } = action.payload
-    //             newGameState[row][col] = tileValue
-    //             return newGameState
-    //         })()
-    //     }
-    //     return {
-    //         ...state,
-    //         room: updatedRoom
-    //     }
-    // }
-
     case ActionTypes.RESET_TILE:
         return {
             ...state,
             gameState: resetState
         }
-
-        // case ActionTypes.CHANGE_PLAYER:{
-        //     let updatedRoom = {
-        //         ...state.room,
-        //         playerTurn: action.payload.playerTurn
-        //     }
-        //     return {
-        //         ...state,
-        //         room: updatedRoom
-        //     }
-        // }
-
-        // case ActionTypes.RUN_GAME_LOGIC: {
-        //     const { row, col, gameState } = action.payload
-        //     let updatedRoom = {
-        //         ...state.room,
-        //         isGameFinished: evaluateIndex(row, col, gameState)
-        //     }
-        //     return {
-        //         ...state,
-        //         room: updatedRoom
-        //     }
-        // }
 
     case ActionTypes.EXECUTE_GAME:
         return {

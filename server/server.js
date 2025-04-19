@@ -6,7 +6,6 @@ const cors = require('cors')
 const router = require('./routes/routes')
 const socketService = require('./services/socketService')
 const {constants} = require("../shared/constants")
-const dbService = require("./services/databaseService");
 require('dotenv').config({ path: '.env.local' })
 
 // Create server and Socket.IO instance

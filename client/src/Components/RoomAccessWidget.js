@@ -19,7 +19,6 @@ export default function RoomAccessWidget(props) {
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
-        // Set up event listener for ROOM_CREATED
         socket.on(constants.ROOM_CREATED, (receivedData) => {
             const alertOptions = {
                 message: `Room created with ID: ${receivedData.roomId}`,
@@ -31,8 +30,6 @@ export default function RoomAccessWidget(props) {
             dispatch(updateRoomId(receivedData.roomId))
             dispatch(showAlert(alertOptions))
         })
-
-        // Set up event listener for ROOM_JOINED
         socket.on(constants.ROOM_JOINED, (receivedData) => {
             console.log(`Room joined with ID: ${receivedData.roomId}`)
             dispatch(updateRoomId(receivedData.roomId))
@@ -60,7 +57,7 @@ export default function RoomAccessWidget(props) {
             dispatch(showAlert(alertOptions))
         })
 
-        // Clean up event listener when component unmounts
+        // Clean up event listeners when component unmounts
         return () => {
             socket.off(constants.ROOM_CREATED)
             socket.off(constants.ROOM_JOINED)

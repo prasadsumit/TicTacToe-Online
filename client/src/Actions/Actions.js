@@ -10,61 +10,11 @@ const resetState = [
     [ 0, 0, 0 ]
 ]
 
-
-export const updateTile = (row, col) => {
-    return (dispatch, getState) => {
-        const playerId = getState().room.playerTurn
-        const opponentId = getOpponentId(playerId, getState)
-        const tileValue = playerId > opponentId ? 1 : 2
-        dispatch({
-            type: ActionTypes.UPDATE_TILE,
-            payload: {
-                row:row,
-                col:col,
-                tileValue:tileValue
-            },
-        })
-    }
-}
-
 export const resetTile = () => {
     return (dispatch) => {
         dispatch({ type: ActionTypes.RESET_TILE })
         dispatch(showWinnerModal(false))
         dispatch(resetGame())
-    }
-}
-
-export const changePlayer = () => {
-    return (dispatch, getState) => {
-        const isGameFinished = getState().room.isGameFinished
-        const currentPlayerTurn = getState().room.playerTurn
-        const nextPlayerTurn = Object.keys(getState().room.players).filter((key) => key !== currentPlayerTurn)[0]
-        if(!isGameFinished) {
-            dispatch({
-                type: ActionTypes.CHANGE_PLAYER,
-                payload: {
-                    playerTurn: nextPlayerTurn
-                }
-            })
-        } else {
-            dispatch(showWinnerModal(true))
-        }
-        return null
-    }
-}
-
-export const runGameLogic = (row, col) => {
-    return (dispatch, getState) => {
-        const gameState = getState().room.gameState
-        dispatch({
-            type: ActionTypes.RUN_GAME_LOGIC,
-            payload: {
-                row: row,
-                col: col,
-                gameState:gameState
-            }
-        })
     }
 }
 
@@ -160,20 +110,6 @@ export const updateUserInfo = (userInfo) => {
                 userInfo: userInfo
             }
         })
-    }
-}
-
-export const initUserInfo = () => {
-    let userInfo = sessionStorage.getItem('userInfo')
-    return (dispatch) => {
-        if(userInfo) {
-            dispatch({
-                type: ActionTypes.UPDATE_USERINFO,
-                payload: {
-                    userInfo: JSON.parse(userInfo)
-                }
-            })
-        }
     }
 }
 
