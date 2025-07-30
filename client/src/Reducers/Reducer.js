@@ -139,7 +139,8 @@ const Reducer = (state = initialState, action) => {
         let room = action.payload.room
         let updatedRoom = {
             ...state.room,
-            isGameFinished: false
+            isGameFinished: false,
+            isGameDrawn: false
         }
         return {
             ...state,

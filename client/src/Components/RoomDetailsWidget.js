@@ -95,7 +95,7 @@ function RoomDetailsWidget(props) {
                 setPlayerTurnMessage('It\'s your turn. Make a move.')
             }
         }
-    }, [ room.playerTurn ])
+    }, [ room.playerTurn, room.isGameDrawn ])
 
     useEffect(() => {
         if(room.isGameFinished) {

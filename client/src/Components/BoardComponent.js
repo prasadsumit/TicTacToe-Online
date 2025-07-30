@@ -24,7 +24,6 @@ export default function BoardComponent(props) {
 
     useEffect(() => {
         if(room && isGameEvent) {
-            console.log('hello')
             socket.emit(C.UPDATE_DB, room)
             dispatch(updateGameEvent(false))
         }
