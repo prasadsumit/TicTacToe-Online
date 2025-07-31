@@ -6,7 +6,7 @@ import RoomAccessWidget from '../Components/RoomAccessWidget'
 import RoomDetailsWidget from '../Components/RoomDetailsWidget'
 import InputModal from '../Components/InputModal'
 import { useDispatch, useSelector } from 'react-redux'
-import { showInputModal, updateRoom } from '../Actions/Actions'
+import {showInputModal, updateRoom, updateRoomId} from '../Actions/Actions'
 import { useParams } from 'react-router-dom'
 import Alert from '../Components/Alert'
 
@@ -97,6 +97,7 @@ function Homepage(props) {
     let userInfo = sessionStorage.getItem('userInfo')
     useEffect(() => {
         if(userInfo) {
+            dispatch(updateRoomId(roomId))
             dispatch(updateRoom(roomId))
         }
     }, [])
