@@ -4,7 +4,7 @@ import { useContext, useEffect, useState } from 'react'
 import { SocketContext } from '../context/SocketContext'
 import { constants } from '../constants'
 import { useDispatch } from 'react-redux'
-import { showAlert, showWinnerModal, updateRoom } from '../Actions/Actions'
+import {showAlert, showWinnerModal, updateRoom, updateUserInfo} from '../Actions/Actions'
 import TextComponent from './TextComponent'
 
 function RoomDetailsWidget(props) {
@@ -26,17 +26,12 @@ function RoomDetailsWidget(props) {
             if(isSocketIdChanged) {
                 // Emit an event to update the socket ID in the database
                 socket.emit(constants.UPDATE_SOCKET_ID, roomId, userInfo.name, userInfo.id)
-
-                // Listen for confirmation that the socket ID was updated
-                socket.on(constants.SOCKET_ID_UPDATED, (data) => {
-                    console.log('Socket ID updated successfully', data)
-                })
-
-                // Clean up listeners when component unmounts
-                return () => {
-                    socket.off(constants.SOCKET_ID_UPDATED)
-                }
+                dispatch(updateUserInfo(userInfo))
             }
+            // Listen for confirmation that the socket ID was updated
+            socket.on(constants.SOCKET_ID_UPDATED, (data) => {
+                console.log('Socket ID updated successfully', data)
+            })
             socket.on(constants.ROOM_JOINED, (receivedData) => {
                 const alertOptions = {
                     message: `${receivedData.userName} joined the room!`,
@@ -75,6 +70,7 @@ function RoomDetailsWidget(props) {
             return () => {
                 socket.off(constants.ROOM_JOINED)
                 socket.off(constants.DB_UPDATED)
+                socket.off(constants.SOCKET_ID_UPDATED)
             }
         }
         return () => {}

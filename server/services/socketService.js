@@ -125,7 +125,6 @@ class SocketService {
 
 	async updateRoom(socket, room) {
 		//update in db
-		// console.log('room room: ', room)
 		await dbService.updateRoomByRoomId(room.roomId, room)
 		this.emitToRoom(room.roomId,constants.DB_UPDATED, {roomId: room.roomId, message: 'DB updated'},socket)
 	}
